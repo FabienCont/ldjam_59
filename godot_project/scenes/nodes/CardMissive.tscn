@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://dykekofyr230"]
+
+[ext_resource type="Texture2D" uid="uid://wiglucppqkle" path="res://assets/sprites/icon_missive.aseprite" id="1_y3gd0"]
+
+[node name="CardMissive" type="Node2D" unique_id=1464483565]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=466377228]
+texture = ExtResource("1_y3gd0")

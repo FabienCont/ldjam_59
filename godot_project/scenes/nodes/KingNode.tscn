@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://bjoo2uodldpm4"]
+
+[ext_resource type="Script" uid="uid://cbmv6cxpogoh5" path="res://scenes/nodes/king_node.gd" id="1_hp4hv"]
+
+[node name="King" type="Node2D" unique_id=1033843744]
+script = ExtResource("1_hp4hv")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1978682572]
+offset_right = 16.0
+offset_bottom = 16.0
+color = Color(1, 1, 0.4745098, 1)

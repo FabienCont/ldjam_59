@@ -1,0 +1,14 @@
+[remap]
+
+importer="aseprite_wizard.plugin.noop"
+type="PackedDataContainer"
+uid="uid://caweakj4bogx8"
+path="res://.godot/imported/shader_texture_grass_save.aseprite-4b4cdb1f67d77470f2f4fc7b35d09397.res"
+
+[deps]
+
+source_file="res://assets/tilesets/shader_texture_grass_save.aseprite"
+dest_files=["res://.godot/imported/shader_texture_grass_save.aseprite-4b4cdb1f67d77470f2f4fc7b35d09397.res"]
+
+[params]
+

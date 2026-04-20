@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://d0u1sris8t0b"]
+
+[ext_resource type="PackedScene" uid="uid://cvud0i2c4gfl7" path="res://scenes/level/Level1.tscn" id="1_rp68t"]
+[ext_resource type="Script" uid="uid://by7jhm84m0us0" path="res://scenes/level_manager.gd" id="1_ua5xg"]
+[ext_resource type="Script" uid="uid://b2y0kk424ep8k" path="res://scripts/game_camera.gd" id="2_ua5xg"]
+[ext_resource type="PackedScene" uid="uid://bqpcdd7u0wwva" path="res://scenes/menu/menu_end_game.tscn" id="4_rrkdu"]
+
+[node name="LevelManager" type="Control" unique_id=1727170313]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("1_ua5xg")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1196891598]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+mouse_target = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=1721416587]
+disable_3d = true
+handle_input_locally = false
+snap_2d_transforms_to_pixel = true
+canvas_item_default_texture_filter = 0
+physics_object_picking = true
+size = Vector2i(1024, 768)
+size_2d_override = Vector2i(1024, 768)
+size_2d_override_stretch = true
+render_target_update_mode = 4
+
+[node name="Level1" parent="SubViewportContainer/SubViewport" unique_id=1151080778 instance=ExtResource("1_rp68t")]
+
+[node name="Camera2D" type="Camera2D" parent="SubViewportContainer/SubViewport" unique_id=2137787273]
+texture_filter = 1
+position = Vector2(57.2222, 263.8889)
+zoom = Vector2(2, 2)
+limit_left = -50
+limit_top = -50
+limit_right = 1135
+limit_bottom = 550
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+drag_left_margin = 0.4
+drag_top_margin = 0.4
+drag_right_margin = 0.4
+drag_bottom_margin = 0.4
+editor_draw_limits = true
+editor_draw_drag_margin = true
+script = ExtResource("2_ua5xg")
+
+[node name="Label" type="Label" parent="." unique_id=1942333632]
+layout_mode = 0
+offset_right = 41.0
+offset_bottom = 23.0
+text = "Turn:"
+
+[node name="EndMenu" parent="." unique_id=2093833323 instance=ExtResource("4_rrkdu")]
+layout_mode = 1

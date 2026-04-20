@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://540nqmji2g7c"]
+
+[ext_resource type="Script" uid="uid://bkwrscfrb84cx" path="res://scenes/nodes/troups_handler_node.gd" id="1_fjka5"]
+
+[node name="TroupsHandler" type="Node2D" unique_id=1578351113]
+script = ExtResource("1_fjka5")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1548718258]
+offset_right = 100.0
+offset_bottom = 100.0
+color = Color(0, 0.4710604, 0.21103942, 0.44705883)

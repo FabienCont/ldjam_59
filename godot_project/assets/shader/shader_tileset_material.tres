@@ -1,0 +1,24 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://d0bj7mh6om1e8"]
+
+[ext_resource type="Shader" uid="uid://bqk45o2yp6n0k" path="res://assets/shader/shader_tileset_water.gdshader" id="1_225sp"]
+[ext_resource type="Texture2D" uid="uid://c37cctkynlp8u" path="res://assets/tilesets/shader_texture_water.aseprite" id="2_ro22t"]
+[ext_resource type="Texture2D" uid="uid://bypyauxqfhkvw" path="res://assets/shader/water_edge_depth.png" id="2_x54b3"]
+
+[resource]
+shader = ExtResource("1_225sp")
+shader_parameter/overlay = ExtResource("2_ro22t")
+shader_parameter/fg_color = Color(1, 0, 0, 1)
+shader_parameter/bg_color = Color(0, 0, 0, 1)
+shader_parameter/tolerance = 0.0
+shader_parameter/tile_size = 155.0
+shader_parameter/wave_speed = 1.0000000475
+shader_parameter/wave_strength = 0.02000000095
+shader_parameter/wave_frequency = 6.0
+shader_parameter/water_shallow_color = Color(0.3, 0.7, 1, 1)
+shader_parameter/water_deep_color = Color(0.05, 0.2, 0.5, 1)
+shader_parameter/color_blend = 0.4
+shader_parameter/gradient_edge_texture = ExtResource("2_x54b3")
+shader_parameter/foam_edge_width = 0.35
+shader_parameter/foam_pulse_speed = 1.0
+shader_parameter/foam_pulse_strength = 0.1
+shader_parameter/foam_color = Color(0.7490196, 1, 1, 1)

@@ -1,0 +1,78 @@
+[gd_scene format=4 uid="uid://nk42xakkubjj"]
+
+[ext_resource type="Script" uid="uid://xt4paqp56imt" path="res://scenes/nodes/flag.gd" id="1_rv436"]
+[ext_resource type="SpriteFrames" uid="uid://di1mvfrtv2xjn" path="res://assets/sprites/flag_static.aseprite" id="2_rv436"]
+[ext_resource type="Shader" uid="uid://dguysmfg5bxvg" path="res://scenes/nodes/flag.gdshader" id="2_xrpfg"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rv436"]
+shader = ExtResource("2_xrpfg")
+shader_parameter/modulate_color = Color(1, 1, 0.29803923, 1)
+
+[sub_resource type="PortableCompressedTexture2D" id="PortableCompressedTexture2D_j857s"]
+_data = PackedByteArray("AAADAAUAAAABAAAAgAAAAIAAAADCAAAAUklGRroAAABXRUJQVlA4TK4AAAAvf8AfEBcgEEjyR51hELFgsj9/vlTEgsn8OWPonv+A7g2Oa9tOlft1jEs6gCpSAi4Z4VYFJWio4FteoQ93BhH9nwC8k3MneKdtjhYrmEL2WR7CjmAZ7deMzSlL6tCGQ5qUEZylpg7RqxG+WCsrYCkYpVkD7WHDshAIlDnIA1JwgLWNFOsPtgekLmHVlhYqlyi0jZDVS5Ayq/DW1MVW9y58cySqtgz9S2x81Nr4Rwk=")
+size_override = Vector2(128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s6b8d"]
+atlas = SubResource("PortableCompressedTexture2D_j857s")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wevaf"]
+atlas = SubResource("PortableCompressedTexture2D_j857s")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g14d1"]
+atlas = SubResource("PortableCompressedTexture2D_j857s")
+region = Rect2(0, 64, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rv436"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s6b8d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wevaf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g14d1")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]
+metadata/imported_via_aw = true
+
+[node name="Flag" type="Node2D" unique_id=552582800]
+position = Vector2(2, 0)
+script = ExtResource("1_rv436")
+owner_index = 1
+metadata/_edit_vertical_guides_ = [-53.0]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1872968885]
+material = SubResource("ShaderMaterial_rv436")
+position = Vector2(49, 47)
+sprite_frames = SubResource("SpriteFrames_rv436")
+autoplay = "default"
+metadata/_aseprite_wizard_interface_config_ = {
+"animation_section": true,
+"layer_section": true,
+"output_section": true,
+"pending_changes": {
+"embed_tex": true,
+"layers": [],
+"o_ex_p": "",
+"o_folder": "",
+"o_name": "",
+"only_visible": false,
+"scale": "1.0",
+"should_round_fps": true,
+"slice": "",
+"source": "",
+"source_uid": -1
+},
+"slice_section": true
+}
+
+[node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="." unique_id=592737814]
+sprite_frames = ExtResource("2_rv436")
+autoplay = "default"

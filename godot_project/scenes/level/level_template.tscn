@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://dt6owedcmkb8p"]
+
+[ext_resource type="PackedScene" uid="uid://clbrgmaa0ior3" path="res://scenes/autotile.tscn" id="1_sb8bx"]
+[ext_resource type="Script" uid="uid://b2y0kk424ep8k" path="res://scripts/game_camera.gd" id="2_a7w1c"]
+
+[node name="Main" type="Node2D" unique_id=1915819712]
+
+[node name="Autotile" parent="." unique_id=1828205396 instance=ExtResource("1_sb8bx")]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=504915847]
+script = ExtResource("2_a7w1c")

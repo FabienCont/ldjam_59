@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://bcdkvs4b022h6"]
+
+[ext_resource type="SpriteFrames" uid="uid://bp0jc2vkvre8b" path="res://assets/sprites/flag_modulate.aseprite" id="1_f7mmi"]
+[ext_resource type="Script" uid="uid://c7nh0lkthmwbe" path="res://scenes/nodes/flag_node.gd" id="1_pt0ca"]
+[ext_resource type="SpriteFrames" uid="uid://di1mvfrtv2xjn" path="res://assets/sprites/flag_static.aseprite" id="2_pt0ca"]
+
+[node name="FlagNode" type="Node2D" unique_id=2047583726]
+script = ExtResource("1_pt0ca")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1397649661]
+sprite_frames = ExtResource("1_f7mmi")
+autoplay = "default"
+frame_progress = 0.021841591
+
+[node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="." unique_id=2060061177]
+sprite_frames = ExtResource("2_pt0ca")

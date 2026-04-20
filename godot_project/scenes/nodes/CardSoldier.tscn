@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://i54bu8vpde5n"]
+
+[ext_resource type="Texture2D" uid="uid://d1c4cwsinptqm" path="res://assets/sprites/icon_soldier.aseprite" id="1_s0te6"]
+
+[node name="CardSoldier" type="Node2D" unique_id=1380778099]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1837643183]
+texture = ExtResource("1_s0te6")

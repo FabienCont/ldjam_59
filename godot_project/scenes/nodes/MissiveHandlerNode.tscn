@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cy5jliscvhg0c"]
+
+[ext_resource type="Script" uid="uid://cg60orcc4tds8" path="res://scenes/nodes/missive_handler_node.gd" id="1_un2db"]
+
+[node name="MissiveHandlerNode" type="Node2D" unique_id=2106749627]
+script = ExtResource("1_un2db")

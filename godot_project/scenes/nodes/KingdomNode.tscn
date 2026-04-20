@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://c5a0b6xpkofc"]
+
+[ext_resource type="Script" uid="uid://cgb1lalfciu5y" path="res://scenes/nodes/kingdom_node.gd" id="1_moata"]
+[ext_resource type="PackedScene" uid="uid://bcdkvs4b022h6" path="res://scenes/nodes/flag_node.tscn" id="2_6rsat"]
+[ext_resource type="Texture2D" uid="uid://d2htc3ucejy0j" path="res://assets/sprites/village_01.aseprite" id="2_mut08"]
+[ext_resource type="FontFile" uid="uid://cm2r5kqrngglu" path="res://assets/fonts/Kenney Pixel.ttf" id="3_6rsat"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3sv3j"]
+size = Vector2(60, 60)
+
+[node name="KingdomNode" type="Node2D" unique_id=1292490933]
+script = ExtResource("1_moata")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1659760113]
+collision_layer = 9
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=515594640]
+position = Vector2(0, 6)
+shape = SubResource("RectangleShape2D_3sv3j")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=545363185]
+visible = false
+offset_right = 32.0
+offset_bottom = 32.0
+mouse_filter = 2
+color = Color(0.29475394, 0.33188856, 0.31948695, 1)
+
+[node name="FlagNode" parent="." unique_id=2047583726 instance=ExtResource("2_6rsat")]
+position = Vector2(13, -27)
+
+[node name="Label" type="Label" parent="." unique_id=271758180]
+modulate = Color(0, 0, 0, 1)
+texture_filter = 1
+offset_left = 16.0
+offset_top = -44.0
+offset_right = 56.0
+offset_bottom = -21.0
+pivot_offset = Vector2(9, 5)
+theme_override_fonts/font = ExtResource("3_6rsat")
+text = "0"
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1181578890]
+texture = ExtResource("2_mut08")
+
+[connection signal="input_event" from="Area2D" to="." method="_on_area_2d_input_event"]
