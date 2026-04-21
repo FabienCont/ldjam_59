@@ -1,6 +1,8 @@
 extends CenterContainer
 
-@onready var button_menu: Button = $VBoxContainer/Button
+@onready var retry_button: Button = $VBoxContainer/RetryButton
+@onready var next_button: Button = $VBoxContainer/NextButton
+@onready var return_button: Button = $VBoxContainer/ReturnButton
 @onready var label: Label= $VBoxContainer/Label
 
 const LEVEL_SCENE_PATH: String = "scenes/LevelManager.tscn"
@@ -8,16 +10,23 @@ const MENU_SCENE_PATH: String = "scenes/menu/Menu.tscn"
 
 func _ready():
 	SceneManager.preload_scene(LEVEL_SCENE_PATH)
-	button_menu.pressed.connect(_on_button_menu_pressed)
+	SceneManager.preload_scene(MENU_SCENE_PATH)
+	retry_button.pressed.connect(_on_button_retry_pressed)
+	next_button.pressed.connect(_on_button_next_level_pressed)
+	return_button.pressed.connect(_on_button_menu_pressed)
 	
 	if GameManager.winner_index == 0:
-		label.text = "WINNER !"
+		label.text = "YOU WON !"
 	else:
-		label.text = "YOU LOSE!"
+		label.text = "YOU LOST !"
 
+
+func _on_button_next_level_pressed() -> void:
+	await SceneManager.change_scene_with_path(LEVEL_SCENE_PATH)
 
 func _on_button_menu_pressed() -> void:
 	await SceneManager.change_scene_with_path(MENU_SCENE_PATH)
 
 func _on_button_retry_pressed() -> void:
+	GameManager.current_level -=1
 	await SceneManager.change_scene_with_path(LEVEL_SCENE_PATH)

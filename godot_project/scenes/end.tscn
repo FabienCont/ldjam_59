@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://bgnqlufihyykn"]
+
+[ext_resource type="Texture2D" uid="uid://4rplhkyvk52t" path="res://assets/splash/splash_screen.png" id="1_mwn6m"]
+[ext_resource type="Texture2D" uid="uid://wiglucppqkle" path="res://assets/sprites/icon_missive.aseprite" id="2_3d26k"]
+[ext_resource type="Script" uid="uid://erdftshmip1l" path="res://scenes/button.gd" id="3_p7m4f"]
+
+[node name="Control" type="Control" unique_id=1005822102]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1710537027]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_mwn6m")
+expand_mode = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1336446805]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=66084983]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer" unique_id=1734118842]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer/VBoxContainer/HBoxContainer" unique_id=2095392984]
+layout_mode = 2
+texture = ExtResource("2_3d26k")
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/HBoxContainer" unique_id=1113339854]
+layout_mode = 2
+text = "Kwak, Thanks for playing, Kwak ! "
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Button" type="Button" parent="CenterContainer/VBoxContainer" unique_id=376357988]
+layout_mode = 2
+text = "Return to Menu!"
+script = ExtResource("3_p7m4f")
+
+[connection signal="pressed" from="CenterContainer/VBoxContainer/Button" to="CenterContainer/VBoxContainer/Button" method="_on_pressed"]

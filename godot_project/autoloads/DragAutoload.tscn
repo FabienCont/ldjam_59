@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://c6btivol37e6o"]
+
+[ext_resource type="Script" uid="uid://cnpds64fi2g2v" path="res://autoloads/drag_autoload.gd" id="1_ehh72"]
+
+[node name="DragAutoload" type="Node2D" unique_id=98949233]
+script = ExtResource("1_ehh72")

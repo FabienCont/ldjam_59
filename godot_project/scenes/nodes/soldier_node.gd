@@ -8,8 +8,17 @@ extends Node2D
 signal die(soldier_node:SoldierNode)
 signal arrived(soldier_node:SoldierNode)
 
-func  _on_ready() -> void:
+var rng = RandomNumberGenerator.new()
+
+func _ready() -> void:
 	collision_area.area_entered.connect(on_collide)
+	var index = rng.randi_range(0, 2)
+	if(index == 0):
+		AudioManager.play_sfx(AudioManager.SFX_WALK)
+	elif index==1: 
+		AudioManager.play_sfx(AudioManager.SFX_WALK_1)
+	else:
+		AudioManager.play_sfx(AudioManager.SFX_WALK_2)
 	if(troupsOrigin.owner_index == 1):
 		sprite.sprite_frames = texture_enemy
 
@@ -44,11 +53,13 @@ func _process(delta):
 	else:
 		sprite.flip_h = false
 
-	global_position = global_position.move_toward(kingdom_destination.global_position, delta * 120)
+	position = position.move_toward(kingdom_destination.global_position, delta * 120)
 
 func on_collide(area: Area2D):
+	printerr("oncollide")
 	var unit = area.get_parent()
-	if not unit.has_meta(troupsOrigin) :
+	printerr("oncollide"+str(unit))
+	if unit is KingdomNode:
 		return
 	if not unit.troupsOrigin is TroupsDefinitionResource:
 		return

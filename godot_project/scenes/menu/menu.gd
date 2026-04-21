@@ -10,4 +10,5 @@ func _ready():
 	start_button.connect("pressed", Callable(self , "_on_start_button_pressed"))
 
 func _on_start_button_pressed() -> void:
+	AudioManager.play_music(AudioManager.MUSIC_MENU)
 	await SceneManager.change_scene_with_path(LEVEL_SCENE_PATH)

@@ -12,6 +12,8 @@ signal kingdom_selected(kingdom: KingdomNode)
 @onready var roads_to_neighbours: Array = [];
 @onready var tween
 
+@export var force_unit_number: int = -1
+
 @export var kingdom: KingdomDefinitionResource:
 	set= set_kingdom;
 

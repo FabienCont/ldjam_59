@@ -20,7 +20,7 @@ enum TurnState {
 @onready var turn: int = 0;
 @onready var winner_index: int = 0;
 @onready var current_level: int = -1;
-@onready var levels=['scenes/level_1.tscn']
+@onready var levels=['Level0.tscn','Level2.tscn','Level3.tscn','Level1.tscn']
 
 func restart_level():
 	setup()
@@ -35,9 +35,15 @@ func is_last_level():
 	return false
 
 func get_next_level():
-	if not is_last_level:
+	if not is_last_level():
 		current_level += 1;
 		setup()
+		if(current_level ==1 or current_level ==3):
+			AudioManager.play_music(AudioManager.MUSIC_MENU2)
+			
+		if(current_level ==2):
+			AudioManager.play_music(AudioManager.MUSIC_MENU1)
+		return "res://scenes/level/"+levels[current_level]
 	else:
 		return null
 

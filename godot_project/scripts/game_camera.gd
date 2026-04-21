@@ -11,17 +11,13 @@ var _zoom_level := 2.0 :
 
 @onready var tween: Tween
 
-@onready var is_dragging = false
-@onready var drag_vector: Vector2
-
 func _ready() -> void:
 	zoom = Vector2(_zoom_level,_zoom_level)
 func _process(delta: float) -> void:
-	if is_dragging == false:
+	if DragAutoload.is_dragging == false:
 		global_position =lerp(global_position,get_global_mouse_position(),delta*1.5)
 	else:
-		print("drag screen",drag_vector)
-		global_position = lerp(global_position, drag_vector + global_position,delta *40 )
+		global_position = lerp(global_position, DragAutoload.drag_vector + global_position,delta *40 )
 
 func _set_zoom_level(value: float) -> void:
 	var zoom_level= clamp(value, min_zoom, max_zoom)

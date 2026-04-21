@@ -6,8 +6,15 @@ extends Node2D
 signal die(missive_node: MissiveNode)
 signal arrived(missive_node: MissiveNode)
 
-func  _on_ready() -> void:
+var rng = RandomNumberGenerator.new()
+
+func  _ready() -> void:
 	collision_area.area_entered.connect(on_collide)
+	var index = rng.randi_range(0, 10)
+	if(index == 0):
+		AudioManager.play_sfx(AudioManager.SFX_CROW)
+	elif(index == 1): 
+		AudioManager.play_sfx(AudioManager.SFX_CROW_1)
 
 var troupsOrigin = TroupsDefinitionResource:
 	set=set_troups_origin
@@ -38,11 +45,14 @@ func _process(delta)-> void:
 	
 func on_collide(area: Area2D):
 	var unit = area.get_parent()
-	if not unit.has_meta(troupsOrigin) :
+	if not unit :
 		return
+	if unit is KingdomNode:
+		return
+	
 	if not unit.troupsOrigin is TroupsDefinitionResource:
 		return
-
+	
 	if unit.troupsOrigin.owner_index != troupsOrigin.owner_index:
 		die.emit(self)
 		if not is_queued_for_deletion():	

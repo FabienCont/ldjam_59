@@ -41,14 +41,23 @@ func _ready() -> void:
 			var index = kingdoms.size();
 			kingdoms.append(kingdoms_child_node)
 			if (index == 0):
-				set_castle_info(kingdoms_child_node, true, 0, 20,dicoKingdomNeighbours[kingdoms_child_node], dicoKingdomNeighboursRoads[kingdoms_child_node])
+				var troups_number:int = 20
+				if kingdoms_child_node.force_unit_number != -1:
+					troups_number = kingdoms_child_node.force_unit_number
+				set_castle_info(kingdoms_child_node, true, 0, troups_number,dicoKingdomNeighbours[kingdoms_child_node], dicoKingdomNeighboursRoads[kingdoms_child_node])
 			else:
-				set_castle_info(kingdoms_child_node, false,-1, 10,dicoKingdomNeighbours[kingdoms_child_node], dicoKingdomNeighboursRoads[kingdoms_child_node])
+				var troups_number:int = 20
+				if kingdoms_child_node.force_unit_number != -1:
+					troups_number = kingdoms_child_node.force_unit_number
+				set_castle_info(kingdoms_child_node, false,-1, troups_number,dicoKingdomNeighbours[kingdoms_child_node], dicoKingdomNeighboursRoads[kingdoms_child_node])
 			kingdoms_child_node.kingdom_selected.connect(select_kingdom)
 
 	if (kingdoms.size() > 1):
 		var kingdom = kingdoms[kingdoms.size() - 1]
-		set_castle_info(kingdom, true,1, 20,dicoKingdomNeighbours[kingdom],dicoKingdomNeighboursRoads[kingdom])
+		var troups_number:int = 20
+		if kingdom.force_unit_number != -1:
+			troups_number = kingdom.force_unit_number
+		set_castle_info(kingdom, true,1, troups_number,dicoKingdomNeighbours[kingdom],dicoKingdomNeighboursRoads[kingdom])
 		
 
 func set_castle_info(kingdom_node: KingdomNode, is_castle: bool, owner_index: int, troups_number: int, neighbours: Array, neighboursRoads: Array) -> void:
@@ -341,14 +350,22 @@ func check_end_turn():
 			add_handler(handler)
 		handler_nodes_next_round = []
 		GameManager.end_turn()
-	check_game_finished()
+		var is_finish = check_game_finished()	
+		if not is_finish and false:
+			for kingdom_node in kingdoms:
+				if kingdom_node.kingdom.owner_index ==0 or kingdom_node.kingdom.owner_index:
+					kingdom_node.kingdom.troups_number +=4
 		
 	
 func check_game_finished() -> bool:
+	printerr("check_game_finished")
 	if kingdoms[0].kingdom.owner_index == 1:
+		
+		printerr("check_game_finished, success")
 		GameManager.end_game(1)
 		return true
 	if  kingdoms[kingdoms.size()-1].kingdom.owner_index == 0 :
+		printerr("check_game_finished, success")
 		GameManager.end_game(0)
 		return true
 	return false
