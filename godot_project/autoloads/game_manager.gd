@@ -69,6 +69,6 @@ func end_turn() -> void:
 	turn_state =TurnState.WAITING
 
 func end_game(winner:int) -> void:
-	game_state = GameState.FINISH
 	winner_index=winner
+	game_state = GameState.FINISH
 	game_finished.emit()

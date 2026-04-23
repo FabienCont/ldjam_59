@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://d0u1sris8t0b"]
 
 [ext_resource type="Script" uid="uid://by7jhm84m0us0" path="res://scenes/level_manager.gd" id="1_ua5xg"]
+[ext_resource type="Theme" uid="uid://df7ydgqi56bsa" path="res://resources/theme.tres" id="2_ua5xg"]
 [ext_resource type="PackedScene" uid="uid://bqpcdd7u0wwva" path="res://scenes/menu/menu_end_game.tscn" id="4_rrkdu"]
 
 [node name="LevelManager" type="Control" unique_id=1727170313]
@@ -35,10 +36,13 @@ size_2d_override_stretch = true
 render_target_update_mode = 4
 
 [node name="Label" type="Label" parent="." unique_id=1942333632]
-visible = false
 layout_mode = 0
-offset_right = 41.0
-offset_bottom = 23.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 62.0
+offset_bottom = 34.0
+theme = ExtResource("2_ua5xg")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Turn:"
 
 [node name="EndMenu" parent="." unique_id=2093833323 instance=ExtResource("4_rrkdu")]

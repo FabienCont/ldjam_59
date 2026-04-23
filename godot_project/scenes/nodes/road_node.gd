@@ -24,5 +24,5 @@ func _draw() -> void:
 
 func draw_line_between_kingdom() -> void:
     if kingdom_a != null and kingdom_b != null:
-        draw_line(kingdom_a.global_position,kingdom_b.global_position, Color(255,0,0,255),10)
+        draw_line(kingdom_a.global_position,kingdom_b.global_position, Color.from_rgba8(255,0,0,255),10)
     pass

@@ -31,11 +31,6 @@ func _ready() -> void:
 		dicoKingdomNeighbours[road.kingdom_a].append(road.kingdom_b)
 		dicoKingdomNeighbours[road.kingdom_b].append(road.kingdom_a)
 
-
-		print("dicoKingdomNeighboursRoads"+str(dicoKingdomNeighboursRoads.size()))
-		print("dicoKingdomNeighbours"+str(dicoKingdomNeighbours.size()))
-
-
 	for kingdoms_child_node in kingdoms_node.get_children():
 		if kingdoms_child_node is KingdomNode:
 			var index = kingdoms.size();
@@ -76,8 +71,6 @@ func set_castle_info(kingdom_node: KingdomNode, is_castle: bool, owner_index: in
 func select_kingdom(kingdom_node: KingdomNode)-> void:
 	if GameManager.turn_state ==GameManager.TurnState.PLAYING or GameManager.game_state == GameManager.GameState.FINISH :
 		return
-	print("kingdomSelected",kingdomSelected)
-	print("select_kingdom",kingdom_node)
 	if kingdomSelected == null and kingdom_node.kingdom.owner_index == indexPlayer:
 		kingdomSelected = kingdom_node
 		kingdom_node.selected = true
@@ -88,34 +81,32 @@ func select_kingdom(kingdom_node: KingdomNode)-> void:
 			kingdom_node.selected =false
 			return
 		if kingdomSelected.kingdom.is_castle == true:
-			var roadsFound = find_shortest_path(kingdomSelected,kingdom_node,0, 0, [],1000000000,[])
+			var roadsFound = get_shortest_path(kingdomSelected,kingdom_node,indexPlayer)
 			
 			if roadsFound.size() >0: 
-				send_troup(kingdomSelected,kingdom_node,roadsFound,0)
+				send_troup(kingdomSelected,kingdom_node,roadsFound,indexPlayer)
 			else:
 				kingdomSelected.selected=false
 				kingdom_node.selected =false
 				kingdomSelected = null
 				return
 		else:
-			var roadsFoundMissive = find_shortest_path(kingdoms[0],kingdomSelected,0, 0, [],1000000000,[])
+			var roadsFoundMissive = get_shortest_path(kingdoms[0],kingdomSelected,indexPlayer)
 			if roadsFoundMissive.size() ==0: 
 				kingdomSelected.selected=false
 				kingdom_node.selected =false
 				kingdomSelected = null
 				return
 			
-			var roadsFound = find_shortest_path(kingdomSelected,kingdom_node,0, 0, [],1000000000, [])
+			var roadsFound = get_shortest_path(kingdomSelected,kingdom_node,indexPlayer)
 			if roadsFound.size() ==0: 
 				kingdomSelected.selected=false
 				kingdom_node.selected =false
 				kingdomSelected = null
 				return	
 			
-			send_missive(kingdoms[0],kingdomSelected,roadsFoundMissive,roadsFound,0)
-		print("IA START")
+			send_missive(kingdoms[0],kingdomSelected,roadsFoundMissive,roadsFound,indexPlayer)
 		play_turn_ia(1)
-		print("IA STOPPED")
 		GameManager.play_turn()
 		kingdomSelected.selected=false
 		kingdom_node.selected =false
@@ -140,7 +131,7 @@ func play_turn_ia(owner_index:int):
 		for kingdom_node in random_sort_kingdoms:
 			if kingdom_node.kingdom.owner_index == owner_index:
 				continue
-			var roadsFound = find_shortest_path(castle,kingdom_node,owner_index, 0, [],1000000000, [])
+			var roadsFound = get_shortest_path(castle,kingdom_node,owner_index)
 			if roadsFound.size() > 0:
 				possible_path.append(roadsFound)
 				if roadsFound.size() > max_distance_castle:
@@ -189,12 +180,12 @@ func play_turn_ia(owner_index:int):
 				if kingdom_node.kingdom.owner_index == owner_index:
 					continue
 
-				var roadsFoundMissive = find_shortest_path(castle,own_kingdom,owner_index, 0, [],1000000000, [])
+				var roadsFoundMissive = get_shortest_path(castle,own_kingdom,owner_index)
 
 				if roadsFoundMissive.size() == 0:
 					continue
 					
-				var roadsFound = find_shortest_path(own_kingdom,kingdom_node,owner_index, 0, [],1000000000, [])
+				var roadsFound = get_shortest_path(own_kingdom,kingdom_node,owner_index)
 				if roadsFound.size() == 0:
 					continue
 
@@ -226,7 +217,14 @@ func play_turn_ia(owner_index:int):
 					send_missive(castle,max_distance_path_missive[max_distance_path_missive.size() - 1],max_distance_path_missive,max_distance_path,owner_index)
 					return
 
-func find_shortest_path(kingdom_node_departure: KingdomNode,kingdom_node_destination: KingdomNode, owner_index:int, distance:int, kingdom_path_took:Array, shortest_distance_found:int,road_took:Array) -> Array:
+func get_shortest_path(kingdom_node_departure: KingdomNode,kingdom_node_destination: KingdomNode, owner_index:int) -> Array:
+	
+	var shortest_path = _find_shortest_path(kingdom_node_departure,kingdom_node_destination,owner_index, 0, [kingdom_node_departure],1000000000, [])
+	if shortest_path.size() < 2:
+		return []
+	return shortest_path
+
+func _find_shortest_path(kingdom_node_departure: KingdomNode,kingdom_node_destination: KingdomNode, owner_index:int, distance:int, kingdom_path_took:Array, shortest_distance_found:int,road_took:Array) -> Array:
 	var roadsNodes: Array = kingdom_node_departure.roads_to_neighbours
 	var roadsFound: Array = [] 
 	for roadNode in roadsNodes:
@@ -252,7 +250,7 @@ func find_shortest_path(kingdom_node_departure: KingdomNode,kingdom_node_destina
 			if kingdom_neighbour.kingdom.owner_index != owner_index:
 				continue
 			
-			var shortest_roads= find_shortest_path(kingdom_neighbour,kingdom_node_destination,owner_index, distance+1, new_kingdom_path_took,shortest_distance_found,new_road_took)
+			var shortest_roads= _find_shortest_path(kingdom_neighbour,kingdom_node_destination,owner_index, distance+1, new_kingdom_path_took,shortest_distance_found,new_road_took)
 			if shortest_roads.size() >= shortest_distance_found or shortest_roads.size() ==0:
 				continue
 			roadsFound = shortest_roads
@@ -285,9 +283,6 @@ func calculate_kingdom_path(kingdom_node_departure: KingdomNode,road_path: Array
 	return kingdom_path
 
 func send_troup(kingdom_node_departure: KingdomNode,kingdom_node_destination: KingdomNode,road_path: Array,owner_index:int) -> void:
-	print("send_troup"+ str(owner_index))
-	var pos = kingdom_node_departure.global_position
-	var _dest = kingdom_node_destination.global_position
 	var troups_scene = TroupsHandlerNode.new()
 	var troups_definition = TroupsDefinitionResource.new()
 	troups_scene.troups = troups_definition
@@ -296,14 +291,10 @@ func send_troup(kingdom_node_departure: KingdomNode,kingdom_node_destination: Ki
 	troups_scene.troups.kingdom_departure=kingdom_node_departure
 	troups_scene.troups.kingdom_destination=kingdom_node_destination
 	troups_scene.troups.road_path = road_path
-	troups_scene.global_position = pos
 	add_handler(troups_scene)
 
 
 func send_missive(kingdom_node_departure: KingdomNode,kingdom_node_destination: KingdomNode,road_path_missive: Array,road_path_troops: Array,owner_index:int) -> void:
-	print("send_missive"+ str(owner_index))
-	var pos = kingdom_node_departure.global_position
-	var _dest = kingdom_node_destination.global_position
 	var troups_scene = MissiveHandlerNode.new()
 	var troups_definition = TroupsDefinitionResource.new()
 	troups_scene.troups = troups_definition
@@ -313,20 +304,19 @@ func send_missive(kingdom_node_departure: KingdomNode,kingdom_node_destination: 
 	troups_scene.troups.kingdom_destination=kingdom_node_destination
 	troups_scene.troups.road_path = road_path_missive
 	troups_scene.road_path_troops = road_path_troops
-	troups_scene.global_position = pos
 	add_handler(troups_scene)
 
 func add_handler(troups_scene):
-	print("add_handler troups_scene" + str(troups_scene))
-	if not troups_scene and troups_scene.is_queued_for_deletion():
-		printerr("Error,add_handler is_queued_for_deletion")
+	if not troups_scene or troups_scene.is_queued_for_deletion():
+		printerr("❌ Error, add_handler is_queued_for_deletion")
 		return 
 
-	add_child(troups_scene)
 	handler_nodes.append(troups_scene)
 	troups_scene.finish_turn.connect(on_handler_finish_turn)
 	troups_scene.handler_free.connect(on_handler_free)
-	troups_scene.handler_added.connect(on_handler_added)
+	if troups_scene.has_signal("handler_added"):
+		troups_scene.handler_added.connect(on_handler_added)
+	add_child(troups_scene)
 
 func on_handler_finish_turn(handler):
 	handler_nodes_finished.append(handler)
@@ -343,29 +333,30 @@ func on_handler_free(handler):
 
 func check_end_turn():
 	var is_turn_finished = handler_nodes_finished.size() == handler_nodes.size()
-	print("is_turn_finished"+str(is_turn_finished))
 	if is_turn_finished:
-		handler_nodes_finished = []
-		for handler in handler_nodes_next_round:
-			add_handler(handler)
-		handler_nodes_next_round = []
-		GameManager.end_turn()
-		var is_finish = check_game_finished()	
-		if not is_finish and false:
-			for kingdom_node in kingdoms:
-				if kingdom_node.kingdom.owner_index ==0 or kingdom_node.kingdom.owner_index:
-					kingdom_node.kingdom.troups_number +=4
+		print("turn_finished"+str(is_turn_finished))
+		end_turn()
 		
-	
+		
+func end_turn():
+	handler_nodes_finished = []
+	for handler in handler_nodes_next_round:
+		add_handler(handler)
+	handler_nodes_next_round = []
+	GameManager.end_turn()
+	var is_finish = check_game_finished()
+	if is_finish:
+		return
+	if not is_finish and false:
+		for kingdom_node in kingdoms:
+			if kingdom_node.kingdom.owner_index ==0 or kingdom_node.kingdom.owner_index:
+				kingdom_node.kingdom.troups_number +=4
+
 func check_game_finished() -> bool:
-	printerr("check_game_finished")
 	if kingdoms[0].kingdom.owner_index == 1:
-		
-		printerr("check_game_finished, success")
 		GameManager.end_game(1)
 		return true
 	if  kingdoms[kingdoms.size()-1].kingdom.owner_index == 0 :
-		printerr("check_game_finished, success")
 		GameManager.end_game(0)
 		return true
 	return false

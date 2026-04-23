@@ -16,7 +16,6 @@ func set_owner_index(value:int) -> void:
 	set_color_flag()
 
 func set_color_flag():
-	print("set_color_flag")
 	var modulate_color = Color(255,255,255,255)
 	if owner_index == 1:
 	   

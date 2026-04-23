@@ -1,6 +1,6 @@
 extends Control
 
-const END_SCENE_PATH: String = "menu/EndMenu.tscn"
+const END_SCENE_PATH: String = "res://scenes/end.tscn"
 @onready var label:Label = $Label 
 @onready var end_menu:Control = $EndMenu
 @onready var viewport  :SubViewport = $SubViewportContainer/SubViewport
@@ -11,10 +11,14 @@ var relativeVec : Vector2
 
 func load_level() -> void:
 	var level_string = GameManager.get_next_level()
-	print(level_string)
 	if level_string:
 		var packed_scene: PackedScene = load(level_string)
 		viewport.add_child(packed_scene.instantiate())
+	else:
+		print("No more levels to load.")
+		end_menu.visible = true
+		var packed_scene: PackedScene = load(END_SCENE_PATH)
+		add_child(packed_scene.instantiate())
 
 func _handle_input(event) -> void:
 	relativeVec = Vector2(0.0, 0.0)
@@ -50,7 +54,7 @@ func _ready() -> void:
 	pass
 
 func _process(_delta: float) -> void:
-	label.text = "Turn:"+str(GameManager.turn)
+	label.text = "Turn : "+str(GameManager.turn)
 	
 func _on_game_finish() -> void:
 	if GameManager.is_last_level():

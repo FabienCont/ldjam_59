@@ -42,6 +42,7 @@ func _ready() -> void:
 
 func play_music(path: String, crossfade: float = 0.5) -> void:
 	if not ResourceLoader.exists(path):
+		printerr("❌play_music not ResourceLoader.exists(path)"+str(path))
 		return
 	var stream: AudioStream = load(path)
 	if crossfade > 0.0 and _music_player.playing:
@@ -67,7 +68,7 @@ func stop_music(fade: float = 0.5) -> void:
 
 func play_sfx(path: String, pitch: float = 1.0) -> void:
 	if not ResourceLoader.exists(path):
-		printerr("play_sfx not ResourceLoader.exists(path)"+str(path))
+		printerr("❌ play_sfx not ResourceLoader.exists(path)"+str(path))
 		return
 	var player := _get_free_sfx_player()
 	if player == null:

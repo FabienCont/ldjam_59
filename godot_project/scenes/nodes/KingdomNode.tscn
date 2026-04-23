@@ -10,10 +10,11 @@ size = Vector2(60, 60)
 
 [node name="KingdomNode" type="Node2D" unique_id=1292490933]
 script = ExtResource("1_moata")
+force_unit_number = null
 
 [node name="Area2D" type="Area2D" parent="." unique_id=1659760113]
-collision_layer = 9
-collision_mask = 7
+collision_layer = 8
+collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=515594640]
 position = Vector2(0, 6)
