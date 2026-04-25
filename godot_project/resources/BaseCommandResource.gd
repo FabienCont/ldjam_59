@@ -1,0 +1,7 @@
+class_name BaseCommandResource
+extends Resource
+
+var kingdom_node_departure: KingdomDefinitionResource
+var kingdom_node_destination: KingdomDefinitionResource
+var owner_index: int
+

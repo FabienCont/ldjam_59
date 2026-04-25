@@ -5,6 +5,9 @@ signal kingdom_troups_changed
 signal kingdom_owner_changed
 signal kingdom_is_castle_changed
 
+var neighbours: Array = [];
+var roads_to_neighbours: Array = [];
+
 var is_castle: bool=false:
     set(value):
         is_castle = value
@@ -19,3 +22,5 @@ var troups_number: int = 10:
     set(value):
         troups_number = value
         emit_signal("kingdom_troups_changed")
+
+var kingdomNode: KingdomNode = null

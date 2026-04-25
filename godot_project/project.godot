@@ -24,8 +24,8 @@ AudioManager="*uid://dlyddqdj5gx0v"
 
 [display]
 
-window/size/viewport_width=1024
-window/size/viewport_height=768
+window/size/viewport_width=896
+window/size/viewport_height=504
 window/stretch/mode="canvas_items"
 
 [editor_plugins]

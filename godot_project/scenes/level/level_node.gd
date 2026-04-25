@@ -3,307 +3,159 @@ extends Node2D
 
 @onready var kingdoms_node: Node2D = $Kingdoms
 @onready var roads_node: Node2D = $Roads
-@onready var kingdoms: Array[KingdomNode] = []
+@onready var kingdoms: Array[KingdomDefinitionResource] = []
 @onready var indexPlayer:int = 0
-@onready var kingdomSelected:KingdomNode = null
+@onready var kingdom_selected:KingdomNode = null
+@onready var kingdomHighlighted:Array[KingdomNode] = []
 @onready var handler_nodes = []
 @onready var handler_nodes_finished = []
 @onready var handler_nodes_next_round = []
 
 func _ready() -> void:
-	
 	var dicoKingdomNeighbours: Dictionary[Node,Array] = {}
 	var dicoKingdomNeighboursRoads: Dictionary[Node,Array] = {}
 
 	var roads = roads_node.get_children().filter(func(child): return child is RoadNode);
-	for road in roads:
-		if not dicoKingdomNeighbours.has(road.kingdom_a):
-			dicoKingdomNeighbours[road.kingdom_a] =[]
-		if not dicoKingdomNeighbours.has(road.kingdom_b):
-			dicoKingdomNeighbours[road.kingdom_b] =[]
-		if not dicoKingdomNeighboursRoads.has(road.kingdom_a):
-			dicoKingdomNeighboursRoads[road.kingdom_a] =[]
-		if not dicoKingdomNeighboursRoads.has(road.kingdom_b):
-			dicoKingdomNeighboursRoads[road.kingdom_b] =[]
+	for road_node in roads:
+		if not dicoKingdomNeighbours.has(road_node.kingdom_a):
+			dicoKingdomNeighbours[road_node.kingdom_a] =[]
+		if not dicoKingdomNeighbours.has(road_node.kingdom_b):
+			dicoKingdomNeighbours[road_node.kingdom_b] =[]
+		if not dicoKingdomNeighboursRoads.has(road_node.kingdom_a):
+			dicoKingdomNeighboursRoads[road_node.kingdom_a] =[]
+		if not dicoKingdomNeighboursRoads.has(road_node.kingdom_b):
+			dicoKingdomNeighboursRoads[road_node.kingdom_b] =[]
 
-		dicoKingdomNeighboursRoads[road.kingdom_a].append(road)
-		dicoKingdomNeighboursRoads[road.kingdom_b].append(road)
-		dicoKingdomNeighbours[road.kingdom_a].append(road.kingdom_b)
-		dicoKingdomNeighbours[road.kingdom_b].append(road.kingdom_a)
+		dicoKingdomNeighboursRoads[road_node.kingdom_a].append(road_node.road)
+		dicoKingdomNeighboursRoads[road_node.kingdom_b].append(road_node.road)
+		dicoKingdomNeighbours[road_node.kingdom_a].append(road_node.kingdom_b)
+		dicoKingdomNeighbours[road_node.kingdom_b].append(road_node.kingdom_a)
 
-	for kingdoms_child_node in kingdoms_node.get_children():
-		if kingdoms_child_node is KingdomNode:
-			var index = kingdoms.size();
-			kingdoms.append(kingdoms_child_node)
-			if (index == 0):
-				var troups_number:int = 20
-				if kingdoms_child_node.force_unit_number != -1:
-					troups_number = kingdoms_child_node.force_unit_number
-				set_castle_info(kingdoms_child_node, true, 0, troups_number,dicoKingdomNeighbours[kingdoms_child_node], dicoKingdomNeighboursRoads[kingdoms_child_node])
-			else:
-				var troups_number:int = 20
-				if kingdoms_child_node.force_unit_number != -1:
-					troups_number = kingdoms_child_node.force_unit_number
-				set_castle_info(kingdoms_child_node, false,-1, troups_number,dicoKingdomNeighbours[kingdoms_child_node], dicoKingdomNeighboursRoads[kingdoms_child_node])
-			kingdoms_child_node.kingdom_selected.connect(select_kingdom)
-
-	if (kingdoms.size() > 1):
-		var kingdom = kingdoms[kingdoms.size() - 1]
-		var troups_number:int = 20
-		if kingdom.force_unit_number != -1:
-			troups_number = kingdom.force_unit_number
-		set_castle_info(kingdom, true,1, troups_number,dicoKingdomNeighbours[kingdom],dicoKingdomNeighboursRoads[kingdom])
+	var kingdoms_children = kingdoms_node.get_children()
+	for index in range(kingdoms_children.size()):
+		var kingdoms_child_node = kingdoms_children[index]
+		if not kingdoms_child_node is KingdomNode:
+			continue
 		
+		var troups_number:int = 20
+		if kingdoms_child_node.force_unit_number != -1:
+			troups_number = kingdoms_child_node.force_unit_number
+		if (index == 0):
+			set_kingdom_info(kingdoms_child_node, true, 0, troups_number,dicoKingdomNeighbours[kingdoms_child_node], dicoKingdomNeighboursRoads[kingdoms_child_node])
+		elif index == kingdoms_children.size() - 1:
+			set_kingdom_info(kingdoms_child_node, true, 1, troups_number,dicoKingdomNeighbours[kingdoms_child_node], dicoKingdomNeighboursRoads[kingdoms_child_node])
+		else:
+			set_kingdom_info(kingdoms_child_node, false,-1, troups_number,dicoKingdomNeighbours[kingdoms_child_node], dicoKingdomNeighboursRoads[kingdoms_child_node])
+		kingdoms.append(kingdoms_child_node.kingdom)
+		kingdoms_child_node.kingdom_selected.connect(select_kingdom)
+		kingdoms_child_node.kingdom_hovered.connect(on_kingdom_hovered)
+		kingdoms_child_node.kingdom_unhovered.connect(on_kingdom_unhovered)
 
-func set_castle_info(kingdom_node: KingdomNode, is_castle: bool, owner_index: int, troups_number: int, neighbours: Array, neighboursRoads: Array) -> void:
+func set_kingdom_info(kingdom_node: KingdomNode, is_castle: bool, owner_index: int, troups_number: int, neighbours: Array, neighboursRoads: Array) -> void:
 	if kingdom_node == null:
-		printerr("❌ Erreur : La scene ", kingdom_node, " n'existe pas !")
+		printerr("❌ Erreur : La scene ", str(kingdom_node), " n'existe pas !")
 		return
 	
-	if !kingdom_node.kingdom:
-		kingdom_node.kingdom = KingdomDefinitionResource.new()
+	if kingdom_node.kingdom == null:
+		printerr("❌ Erreur : La ressource KingdomDefinitionResource n'existe pas pas sur le kingdom_node ", str(kingdom_node), " !")
+		return
+
+	kingdom_node.kingdom.is_castle = is_castle
 	kingdom_node.kingdom.owner_index = owner_index
 	kingdom_node.kingdom.troups_number = troups_number
-	kingdom_node.kingdom.is_castle = is_castle
-	kingdom_node.neighbours = neighbours;
-	kingdom_node.roads_to_neighbours = neighboursRoads
+	kingdom_node.kingdom.neighbours = neighbours
+	kingdom_node.kingdom.roads_to_neighbours = neighboursRoads
+	kingdom_node.kingdom.kingdomNode = kingdom_node
+	kingdom_node.update_texture()
+
+func reset_highlight():
+	for kingdom in kingdomHighlighted:
+		kingdom.highlight_state = KingdomNode.HighlightState.NONE
+	kingdomHighlighted = []
+	if kingdom_selected:
+		kingdom_selected.highlight_state = KingdomNode.HighlightState.NONE
+		kingdom_selected = null
+
+func reset_highlight_except_selected():
+	for kingdom in kingdomHighlighted:
+		if kingdom != kingdom_selected:
+			kingdom.highlight_state = KingdomNode.HighlightState.NONE
+	kingdomHighlighted = []
+
+func on_kingdom_hovered(kingdom_node: KingdomNode) -> void:
+	if GameManager.turn_state ==GameManager.TurnState.PLAYING or GameManager.game_state == GameManager.GameState.FINISH :
+		return
+	if not kingdom_selected and kingdom_node.kingdom.owner_index == indexPlayer:
+		kingdom_node.highlight_state = KingdomNode.HighlightState.HIGHLIGHT_ARRIVED
+		kingdomHighlighted.append(kingdom_node)
+		return
+	if kingdom_selected:
+		var shortest_command = KingdomsPathSolver.get_shortest_command(kingdoms[0],kingdom_selected.kingdom,kingdom_node.kingdom,indexPlayer)
+		if not shortest_command:
+			return
+		
+		if shortest_command.road_path_soldier:
+			for kingdom in shortest_command.road_path_soldier:
+				if kingdom.kingdomNode == kingdom_selected:
+					continue
+				if kingdom.kingdomNode not in kingdomHighlighted:
+					kingdom.kingdomNode.highlight_state = KingdomNode.HighlightState.HIGHLIGHT_ARRIVED
+					kingdomHighlighted.append(kingdom.kingdomNode)
+		
+		if shortest_command is MissiveCommandResource:
+			if shortest_command.road_path_missive:
+				for kingdom in shortest_command.road_path_missive:
+					if kingdom.kingdomNode == kingdom_selected:
+						continue
+					if kingdom.kingdomNode not in kingdomHighlighted:
+						kingdom.kingdomNode.highlight_state = KingdomNode.HighlightState.HIGHLIGHT_ARRIVED
+						kingdomHighlighted.append(kingdom.kingdomNode)
+
+
+
+func on_kingdom_unhovered(kingdom_node: KingdomNode) -> void:
+	if GameManager.turn_state ==GameManager.TurnState.PLAYING or GameManager.game_state == GameManager.GameState.FINISH :
+		return
+	if kingdom_selected == kingdom_node:
+		return
+	reset_highlight_except_selected()
 
 func select_kingdom(kingdom_node: KingdomNode)-> void:
 	if GameManager.turn_state ==GameManager.TurnState.PLAYING or GameManager.game_state == GameManager.GameState.FINISH :
 		return
-	if kingdomSelected == null and kingdom_node.kingdom.owner_index == indexPlayer:
-		kingdomSelected = kingdom_node
-		kingdom_node.selected = true
-	elif kingdomSelected != null and kingdom_node != kingdomSelected:
-		if not kingdoms.size() > 0:
-			kingdomSelected.selected=false
-			kingdomSelected = null
-			kingdom_node.selected =false
+	if kingdom_selected == kingdom_node:
+		reset_highlight()
+		return
+	if kingdom_selected == null and kingdom_node.kingdom.owner_index == indexPlayer:
+		kingdom_selected = kingdom_node
+		kingdom_node.highlight_state = KingdomNode.HighlightState.SELECTED
+		return
+	elif kingdom_selected != null and kingdom_node != kingdom_selected:
+		var shortest_command = KingdomsPathSolver.get_shortest_command(kingdoms[0],kingdom_selected.kingdom,kingdom_node.kingdom,indexPlayer)
+		print("shortest_command"+str(shortest_command))
+		if not shortest_command:
+			reset_highlight()
 			return
-		if kingdomSelected.kingdom.is_castle == true:
-			var roadsFound = get_shortest_path(kingdomSelected,kingdom_node,indexPlayer)
-			
-			if roadsFound.size() >0: 
-				send_troup(kingdomSelected,kingdom_node,roadsFound,indexPlayer)
-			else:
-				kingdomSelected.selected=false
-				kingdom_node.selected =false
-				kingdomSelected = null
-				return
-		else:
-			var roadsFoundMissive = get_shortest_path(kingdoms[0],kingdomSelected,indexPlayer)
-			if roadsFoundMissive.size() ==0: 
-				kingdomSelected.selected=false
-				kingdom_node.selected =false
-				kingdomSelected = null
-				return
-			
-			var roadsFound = get_shortest_path(kingdomSelected,kingdom_node,indexPlayer)
-			if roadsFound.size() ==0: 
-				kingdomSelected.selected=false
-				kingdom_node.selected =false
-				kingdomSelected = null
-				return	
-			
-			send_missive(kingdoms[0],kingdomSelected,roadsFoundMissive,roadsFound,indexPlayer)
-		play_turn_ia(1)
+		send_command(shortest_command)
+		var command = BotUtils.get_command_ia(kingdoms, kingdoms[kingdoms.size() - 1], 1)
+		send_command(command)
+		reset_highlight()
 		GameManager.play_turn()
-		kingdomSelected.selected=false
-		kingdom_node.selected =false
-		kingdomSelected = null
-	else:
-		kingdom_node.selected = false
-		kingdomSelected = null
 
-func play_turn_ia(owner_index:int):
-	var possible_path = []
-	var castle = kingdoms[kingdoms.size() - 1]
-	if castle.kingdom.troups_number>5:
-		
-		var max_distance_castle=-1
-		var max_distance_path=[]
-		var shortest_neutral_path=[]
-		var neutral_case_minimun_distance = 100000000
-		var shortest_ennemy_path=[]
-		var enemy_case_minimun_distance = 100000000
-		var random_sort_kingdoms = kingdoms.duplicate()
-		random_sort_kingdoms.shuffle()
-		for kingdom_node in random_sort_kingdoms:
-			if kingdom_node.kingdom.owner_index == owner_index:
-				continue
-			var roadsFound = get_shortest_path(castle,kingdom_node,owner_index)
-			if roadsFound.size() > 0:
-				possible_path.append(roadsFound)
-				if roadsFound.size() > max_distance_castle:
-					max_distance_castle = roadsFound.size() 
-					max_distance_path = roadsFound
-				if kingdom_node.kingdom.owner_index == -1:
-					if neutral_case_minimun_distance < roadsFound.size():
-						neutral_case_minimun_distance = roadsFound.size()
-						shortest_neutral_path = roadsFound
-				if kingdom_node.kingdom.owner_index == 0:
-					if enemy_case_minimun_distance < roadsFound.size():
-						enemy_case_minimun_distance = roadsFound.size()
-						shortest_ennemy_path = roadsFound
-			
-		if enemy_case_minimun_distance < neutral_case_minimun_distance:
-			send_troup(castle,shortest_ennemy_path[shortest_ennemy_path.size() - 1],shortest_ennemy_path,1)
-			return
-		elif neutral_case_minimun_distance < 100000000:
-			send_troup(castle,shortest_neutral_path[shortest_neutral_path.size() - 1],shortest_neutral_path,1)
-			return
-		else:
-			send_troup(castle,max_distance_path[max_distance_path.size() - 1],max_distance_path,1)
-			return
+func send_command(command: BaseCommandResource) -> void:
+	if command is SoldierCommandResource:
+		send_troup(command)
+	elif command is MissiveCommandResource:
+		send_missive(command)
 
-	else:
-		var own_kingdoms = kingdoms.filter(func(kingdom_node):return kingdom_node.kingdom.owner_index == owner_index)
-		if own_kingdoms.size() == 0:
-			return
-	
-		own_kingdoms.sort_custom(func(kingdom_node_a,kingdom_node_b): return kingdom_node_a.kingdom.troups_number >kingdom_node_b.kingdom.troups_number) 
-		
-		for own_kingdom in own_kingdoms:
-			var max_distance_castle=-1
-			var max_distance_path_missive=[];
-			var max_distance_path=[]
-			var shortest_neutral_path_missive=[]
-			var shortest_neutral_path=[]
-			var neutral_case_minimun_distance = 100000000
-			var shortest_ennemy_path_missive=[]
-			var shortest_ennemy_path=[]
-			var enemy_case_minimun_distance = 100000000
-			
-			var random_sort_kingdoms = kingdoms.duplicate()
-			random_sort_kingdoms.shuffle()
-			for kingdom_node in random_sort_kingdoms:
-				if kingdom_node.kingdom.owner_index == owner_index:
-					continue
-
-				var roadsFoundMissive = get_shortest_path(castle,own_kingdom,owner_index)
-
-				if roadsFoundMissive.size() == 0:
-					continue
-					
-				var roadsFound = get_shortest_path(own_kingdom,kingdom_node,owner_index)
-				if roadsFound.size() == 0:
-					continue
-
-				if roadsFound.size() > 0:
-					possible_path.append(roadsFound)
-					var distance = roadsFound.size() + roadsFoundMissive.size()
-					if distance > max_distance_castle:
-						max_distance_castle = distance
-						max_distance_path = roadsFound
-						max_distance_path_missive = roadsFoundMissive
-					if kingdom_node.kingdom.owner_index == -1:
-						if neutral_case_minimun_distance < distance:
-							shortest_neutral_path_missive = roadsFoundMissive
-							neutral_case_minimun_distance = distance
-							shortest_neutral_path = roadsFound
-					if kingdom_node.kingdom.owner_index == 0:
-						if enemy_case_minimun_distance < distance:
-							shortest_ennemy_path_missive = roadsFoundMissive
-							enemy_case_minimun_distance = distance
-							shortest_ennemy_path = roadsFound
-
-				if enemy_case_minimun_distance < neutral_case_minimun_distance:
-					send_missive(castle,shortest_ennemy_path_missive[shortest_ennemy_path_missive.size() - 1],shortest_ennemy_path_missive,shortest_ennemy_path,owner_index)
-					return
-				elif neutral_case_minimun_distance < 100000000:
-					send_missive(castle,shortest_neutral_path_missive[shortest_neutral_path_missive.size() - 1],shortest_neutral_path_missive,shortest_neutral_path,owner_index)
-					return
-				else:
-					send_missive(castle,max_distance_path_missive[max_distance_path_missive.size() - 1],max_distance_path_missive,max_distance_path,owner_index)
-					return
-
-func get_shortest_path(kingdom_node_departure: KingdomNode,kingdom_node_destination: KingdomNode, owner_index:int) -> Array:
-	
-	var shortest_path = _find_shortest_path(kingdom_node_departure,kingdom_node_destination,owner_index, 0, [kingdom_node_departure],1000000000, [])
-	if shortest_path.size() < 2:
-		return []
-	return shortest_path
-
-func _find_shortest_path(kingdom_node_departure: KingdomNode,kingdom_node_destination: KingdomNode, owner_index:int, distance:int, kingdom_path_took:Array, shortest_distance_found:int,road_took:Array) -> Array:
-	var roadsNodes: Array = kingdom_node_departure.roads_to_neighbours
-	var roadsFound: Array = [] 
-	for roadNode in roadsNodes:
-		var kingdom_neighbour = roadNode.kingdom_a
-		if kingdom_neighbour == kingdom_node_departure:
-			kingdom_neighbour = roadNode.kingdom_b
-
-		if road_took.has(roadNode):
-			continue
-	
-		var new_road_took = road_took.duplicate()
-		new_road_took.append(roadNode)
-
-		var new_kingdom_path_took = kingdom_path_took.duplicate()
-		new_kingdom_path_took.append(kingdom_neighbour)
-
-		if kingdom_neighbour == kingdom_node_destination and new_kingdom_path_took.size() < shortest_distance_found:
-			roadsFound = new_kingdom_path_took
-			shortest_distance_found=distance+1
-		else:
-			if(distance+1 >= shortest_distance_found):
-				continue
-			if kingdom_neighbour.kingdom.owner_index != owner_index:
-				continue
-			
-			var shortest_roads= _find_shortest_path(kingdom_neighbour,kingdom_node_destination,owner_index, distance+1, new_kingdom_path_took,shortest_distance_found,new_road_took)
-			if shortest_roads.size() >= shortest_distance_found or shortest_roads.size() ==0:
-				continue
-			roadsFound = shortest_roads
-			shortest_distance_found = shortest_roads.size()
-
-	return roadsFound
-
-func get_neighbour_road(kingdom_node_a:KingdomNode, kingdom_node_b:KingdomNode) -> Array:
-	var index = kingdom_node_a.roads_to_neighbours.find(func(road):
-		return (road.kingdom_a == kingdom_node_a and road.kingdom_b == kingdom_node_b) or (road.kingdom_a == kingdom_node_b and road.kingdom_b == kingdom_node_a)
-		)
-	if( index >= 0):
-		return kingdom_node_a.roads_to_neighbours[index]
-	return []
-
-func get_neighbours(kingdom_node: KingdomNode) -> Array:
-	return kingdom_node.neighbours
-
-func get_next_kingdom(previous_kingdom: KingdomNode,road: RoadNode):
-	if road.kingdom_a ==previous_kingdom:
-		return road.kingdom_node_b
-	return road.kingdom_a
-
-func calculate_kingdom_path(kingdom_node_departure: KingdomNode,road_path: Array):
-	var kingdom_path =[kingdom_node_departure]
-	var previous_kingdom = kingdom_node_departure
-	for road in road_path:
-		previous_kingdom =get_next_kingdom(previous_kingdom, road)
-		kingdom_path.append(previous_kingdom)
-	return kingdom_path
-
-func send_troup(kingdom_node_departure: KingdomNode,kingdom_node_destination: KingdomNode,road_path: Array,owner_index:int) -> void:
-	var troups_scene = TroupsHandlerNode.new()
-	var troups_definition = TroupsDefinitionResource.new()
-	troups_scene.troups = troups_definition
-	troups_scene.troups.owner_index = owner_index
-	troups_scene.troups.quantity=ceili(kingdom_node_departure.kingdom.troups_number / 2.0)
-	troups_scene.troups.kingdom_departure=kingdom_node_departure
-	troups_scene.troups.kingdom_destination=kingdom_node_destination
-	troups_scene.troups.road_path = road_path
+func send_troup(command: SoldierCommandResource) -> void:
+	var troups_scene = SoldierHandlerNode.new()
+	troups_scene.troups = SoldierTroupsResource.new(command.kingdom_node_departure, command.kingdom_node_destination, command.owner_index, ceili(command.kingdom_node_departure.troups_number / 2.0), command.road_path_soldier)
 	add_handler(troups_scene)
 
-
-func send_missive(kingdom_node_departure: KingdomNode,kingdom_node_destination: KingdomNode,road_path_missive: Array,road_path_troops: Array,owner_index:int) -> void:
+func send_missive(command: MissiveCommandResource) -> void:
 	var troups_scene = MissiveHandlerNode.new()
-	var troups_definition = TroupsDefinitionResource.new()
-	troups_scene.troups = troups_definition
-	troups_scene.troups.owner_index = owner_index
-	troups_scene.troups.quantity=1
-	troups_scene.troups.kingdom_departure=kingdom_node_departure
-	troups_scene.troups.kingdom_destination=kingdom_node_destination
-	troups_scene.troups.road_path = road_path_missive
-	troups_scene.road_path_troops = road_path_troops
+	troups_scene.troups = MissiveTroupsResource.new(command.kingdom_node_departure, command.kingdom_node_destination, command.owner_index, 1, command.road_path_soldier, command.road_path_missive)
 	add_handler(troups_scene)
 
 func add_handler(troups_scene):
@@ -337,7 +189,6 @@ func check_end_turn():
 		print("turn_finished"+str(is_turn_finished))
 		end_turn()
 		
-		
 func end_turn():
 	handler_nodes_finished = []
 	for handler in handler_nodes_next_round:
@@ -348,15 +199,15 @@ func end_turn():
 	if is_finish:
 		return
 	if not is_finish and false:
-		for kingdom_node in kingdoms:
-			if kingdom_node.kingdom.owner_index ==0 or kingdom_node.kingdom.owner_index:
-				kingdom_node.kingdom.troups_number +=4
+		for kingdom in kingdoms:
+			if kingdom.owner_index ==0 or kingdom.owner_index:
+				kingdom.troups_number +=4
 
 func check_game_finished() -> bool:
-	if kingdoms[0].kingdom.owner_index == 1:
+	if kingdoms[0].owner_index == 1:
 		GameManager.end_game(1)
 		return true
-	if  kingdoms[kingdoms.size()-1].kingdom.owner_index == 0 :
+	if  kingdoms[kingdoms.size()-1].owner_index == 0 :
 		GameManager.end_game(0)
 		return true
 	return false

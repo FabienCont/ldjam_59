@@ -34,21 +34,20 @@ func set_enemy_texture():
 	if(troupsOrigin.owner_index == 1 and sprite):
 		sprite.sprite_frames = texture_enemy
 func _process(delta):
-	
 	if(troupsOrigin.owner_index == 1 and sprite.sprite_frames != texture_enemy):
 		sprite.sprite_frames = texture_enemy
-	if(troupsOrigin.step > troupsOrigin.road_path.size()-1 ):
+	if(troupsOrigin.step > troupsOrigin.road_path_soldier.size()-1 ):
 		printerr("❌ Soldier_node:Erreur de calcul de step")
 		return
-	var kingdom_destination = troupsOrigin.road_path[troupsOrigin.step + 1]
+	var kingdom_destination = troupsOrigin.road_path_soldier[troupsOrigin.step + 1]
 	
-	var direction = global_position.direction_to(kingdom_destination.global_position)
+	var direction = global_position.direction_to(kingdom_destination.kingdomNode.global_position)
 	if direction.x < 0:
 		sprite.flip_h = true
 	else:
 		sprite.flip_h = false
 
-	position = position.move_toward(kingdom_destination.global_position, delta * 120)
+	position = position.move_toward(kingdom_destination.kingdomNode.global_position, delta * 120)
 
 func die():
 	if _resolved:
@@ -58,6 +57,7 @@ func die():
 	queue_free()
 
 func arrive():
+	print("arrived")
 	if _resolved:
 		return
 	_resolved = true
@@ -65,7 +65,9 @@ func arrive():
 	queue_free()
 
 func on_collide(area: Area2D):
+	print("soldier collide with ", area)
 	var unit = area.get_parent()
+	print("soldier collide with unit ", unit)
 	if unit is KingdomNode:
 		printerr("❌ soldier collide with kingdom")
 		return

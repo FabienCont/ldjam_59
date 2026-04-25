@@ -1,14 +1,13 @@
 class_name MissiveHandlerNode
 extends Node
 
-signal finish_turn(node:TroupsHandlerNode)
-signal handler_free(node:TroupsHandlerNode)
-signal handler_added(node:TroupsHandlerNode)
+signal finish_turn(node:SoldierHandlerNode)
+signal handler_free(node:SoldierHandlerNode)
+signal handler_added(node:SoldierHandlerNode)
 
-@onready var troups: TroupsDefinitionResource;
+@onready var troups: MissiveTroupsResource;
 @onready var timer:Timer= Timer.new()
 @onready var missive_node_scene = preload("MissiveNode.tscn")
-var road_path_troops= []
 
 func _ready() -> void:
 	GameManager.start_new_turn.connect(play_turn)
@@ -18,13 +17,13 @@ func play_turn() -> void:
 		return
 	troups.spawned_quantity =0
 	troups.step += 1
-	if troups.step+1 > troups.road_path.size()-1 :
+	if troups.step+1 > troups.road_path_soldier.size()-1 :
 		printerr("❌ MissiveHandlerNode: Erreur de calcul de step")
 		free_handler()
 		return
 	
-	var kingdom_departure = troups.road_path[troups.step]
-	if(kingdom_departure.kingdom.owner_index != troups.owner_index):
+	var kingdom_departure = troups.road_path_soldier[troups.step]
+	if(kingdom_departure.owner_index != troups.owner_index):
 		free_handler()
 		return
 
@@ -34,12 +33,11 @@ func spawn() -> void:
 	var missive_node = missive_node_scene.instantiate()
 	missive_node.troupsOrigin = troups
 	
-	if troups.step+1 > troups.road_path.size()-1 :
+	if troups.step+1 > troups.road_path_missive.size()-1 :
 		printerr("Missive_handler_node: Erreur de calcul de step")
 		return
 
-
-	missive_node.global_position = troups.road_path[troups.step].global_position
+	missive_node.global_position = troups.road_path_missive[troups.step].kingdomNode.global_position
 	missive_node.top_level=true
 	add_child(missive_node)
 	missive_node.died.connect(on_missive_died);
@@ -55,15 +53,10 @@ func free_handler():
 	queue_free()
 
 func on_missive_arrived(_missive_node:MissiveNode):
-	if troups.step+1 >= troups.road_path.size()-1:
-		var troupsHandler = TroupsHandlerNode.new()
-		var troups_definition = TroupsDefinitionResource.new()
-		troups_definition.owner_index = troups.owner_index
-		troups_definition.kingdom_departure=troups.kingdom_destination
-		troups_definition.kingdom_destination=road_path_troops[road_path_troops.size()-1]
-		troups_definition.quantity = ceili(troups_definition.kingdom_departure.kingdom.troups_number / 2.0)
-		troups_definition.road_path = road_path_troops
-		troupsHandler.troups = troups_definition
+	if troups.step+1 >= troups.road_path_missive.size()-1:
+		var troupsHandler = SoldierHandlerNode.new()
+		var road_path_soldier = troups.road_path_soldier
+		troupsHandler.troups = SoldierTroupsResource.new(road_path_soldier[0], road_path_soldier[road_path_soldier.size()-1], troups.owner_index, ceili(road_path_soldier[0].troups_number / 2.0), road_path_soldier)
 		handler_added.emit(troupsHandler)
 		free_handler()
 	else:

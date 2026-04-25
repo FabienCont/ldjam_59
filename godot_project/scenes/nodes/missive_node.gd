@@ -25,17 +25,17 @@ func set_troups_origin(value:TroupsDefinitionResource)->void:
 	troupsOrigin=value
 
 func _process(delta)-> void:
-	if(troupsOrigin.step+1 > troupsOrigin.road_path.size()-1 ):
+	if(troupsOrigin.step+1 > troupsOrigin.road_path_missive.size()-1 ):
 		printerr("❌ Missive_node: Erreur de calcul de step")
 		return
-	var kingdom_destination = troupsOrigin.road_path[troupsOrigin.step+1]
+	var kingdom_destination = troupsOrigin.road_path_missive[troupsOrigin.step+1]
 	
-	var direction = global_position.direction_to(kingdom_destination.global_position)
+	var direction = global_position.direction_to(kingdom_destination.kingdomNode.global_position)
 	if direction.x <0:
 		sprite.flip_h = true
 	else:
 		sprite.flip_h = false
-	global_position = global_position.move_toward(kingdom_destination.global_position, delta * 150)
+	global_position = global_position.move_toward(kingdom_destination.kingdomNode.global_position, delta * 150)
 
 func die():
 	if _resolved:

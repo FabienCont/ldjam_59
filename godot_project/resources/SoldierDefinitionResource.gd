@@ -1,5 +1,5 @@
 class_name SoldierDefinitionResource
 extends Resource
 
-var kingdom_departure: KingdomNode
-var kingdom_destination: KingdomNode
+var kingdom_departure: KingdomDefinitionResource
+var kingdom_destination: KingdomDefinitionResource

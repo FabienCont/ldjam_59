@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://540nqmji2g7c"]
 
-[ext_resource type="Script" uid="uid://bkwrscfrb84cx" path="res://scenes/nodes/troups_handler_node.gd" id="1_fjka5"]
+[ext_resource type="Script" uid="uid://bkwrscfrb84cx" path="res://scenes/nodes/soldier_handler_node.gd" id="1_fjka5"]
 
-[node name="TroupsHandler" type="Node2D" unique_id=1578351113]
+    [node name="SoldierHandler" type="Node2D" unique_id=1578351113]
 script = ExtResource("1_fjka5")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1548718258]
