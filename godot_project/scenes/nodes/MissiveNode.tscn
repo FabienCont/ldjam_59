@@ -1,19 +1,13 @@
 [gd_scene format=3 uid="uid://dmept5i3ed7kb"]
 
 [ext_resource type="Script" uid="uid://bbkgldtip6a23" path="res://scenes/nodes/missive_node.gd" id="1_qd1o2"]
-[ext_resource type="SpriteFrames" uid="uid://ky3o6uq5mjt5" path="res://assets/sprites/missive.aseprite" id="2_eula8"]
+[ext_resource type="PackedScene" uid="uid://5f1n5jrxkl3g" path="res://scenes/nodes/missive_sprite_2d.tscn" id="2_eula8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8lifb"]
 size = Vector2(16, 16)
 
 [node name="Missive" type="Node2D" unique_id=983276349]
 script = ExtResource("1_qd1o2")
-
-[node name="ColorRect" type="ColorRect" parent="." unique_id=22249581]
-visible = false
-offset_right = 16.0
-offset_bottom = 16.0
-color = Color(1, 0.50980395, 1, 1)
 
 [node name="Area2D" type="Area2D" parent="." unique_id=1079669150]
 collision_layer = 2
@@ -22,6 +16,4 @@ collision_mask = 0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1036488030]
 shape = SubResource("RectangleShape2D_8lifb")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1310346405]
-sprite_frames = ExtResource("2_eula8")
-autoplay = "default"
+[node name="AnimatedSprite2D" parent="." unique_id=148164527 instance=ExtResource("2_eula8")]

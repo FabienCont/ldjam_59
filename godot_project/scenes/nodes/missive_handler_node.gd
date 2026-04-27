@@ -17,12 +17,12 @@ func play_turn() -> void:
 		return
 	troups.spawned_quantity =0
 	troups.step += 1
-	if troups.step+1 > troups.road_path_soldier.size()-1 :
+	if troups.step+1 > troups.road_path_missive.size()-1 :
 		printerr("❌ MissiveHandlerNode: Erreur de calcul de step")
 		free_handler()
 		return
 	
-	var kingdom_departure = troups.road_path_soldier[troups.step]
+	var kingdom_departure = troups.road_path_missive[troups.step]
 	if(kingdom_departure.owner_index != troups.owner_index):
 		free_handler()
 		return
@@ -34,7 +34,7 @@ func spawn() -> void:
 	missive_node.troupsOrigin = troups
 	
 	if troups.step+1 > troups.road_path_missive.size()-1 :
-		printerr("Missive_handler_node: Erreur de calcul de step")
+		printerr("❌ MissiveHandlerNode: Erreur de calcul de step")
 		return
 
 	missive_node.global_position = troups.road_path_missive[troups.step].kingdomNode.global_position

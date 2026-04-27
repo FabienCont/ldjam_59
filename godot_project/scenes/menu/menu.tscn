@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://dhbjmrch4cmmd"]
 
 [ext_resource type="Script" uid="uid://xfxm8buf4lov" path="res://scenes/menu/menu.gd" id="1_j0t7f"]
+[ext_resource type="Texture2D" uid="uid://svkwqd7i6mxy" path="res://assets/splash/splash_16_9.png" id="2_037ec"]
 [ext_resource type="Theme" uid="uid://df7ydgqi56bsa" path="res://resources/theme.tres" id="2_mcvr8"]
 [ext_resource type="FontFile" uid="uid://c1lg8t6ebwku7" path="res://assets/fonts/Kenney Pixel Square.ttf" id="3_037ec"]
-[ext_resource type="Texture2D" uid="uid://4rplhkyvk52t" path="res://assets/splash/splash_screen.png" id="3_e0arn"]
 
-[node name="Control" type="Control" unique_id=491744134]
+[node name="Control" type="Control" unique_id=491744134 node_paths=PackedStringArray("start_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,6 +13,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_j0t7f")
+start_button = NodePath("CenterContainer/VBoxContainer/CenterContainer/StartButton")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=2066593617]
 layout_mode = 1
@@ -21,21 +22,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("3_e0arn")
+texture = ExtResource("2_037ec")
 expand_mode = 3
 stretch_mode = 4
-
-[node name="Label" type="Label" parent="." unique_id=2040865464]
-layout_mode = 0
-offset_left = 132.0
-offset_top = 244.0
-offset_right = 852.0
-offset_bottom = 340.0
-theme_override_fonts/font = ExtResource("3_037ec")
-theme_override_font_sizes/font_size = 64
-text = "The Homing Crows"
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=755194006]
 layout_mode = 1
@@ -48,7 +37,18 @@ grow_vertical = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=1331222717]
 layout_mode = 2
 
-[node name="StartButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1572917571]
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer" unique_id=2040865464]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_037ec")
+theme_override_font_sizes/font_size = 64
+text = "The Homing Crows"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="CenterContainer/VBoxContainer" unique_id=1203408649]
+layout_mode = 2
+
+[node name="StartButton" type="Button" parent="CenterContainer/VBoxContainer/CenterContainer" unique_id=1572917571]
 layout_mode = 2
 theme = ExtResource("2_mcvr8")
 text = "Start"

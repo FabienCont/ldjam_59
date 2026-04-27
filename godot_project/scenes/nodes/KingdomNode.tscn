@@ -35,6 +35,7 @@ theme_override_fonts/font = ExtResource("3_6rsat")
 text = "0"
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1181578890]
+clip_children = 2
 texture = ExtResource("2_mut08")
 
 [node name="Sprite2DFocus" type="Sprite2D" parent="." unique_id=46867449]

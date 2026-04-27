@@ -1,7 +1,7 @@
 extends Control
 
 
-@onready var start_button = $CenterContainer/VBoxContainer/StartButton
+@export var start_button:Button 
 
 const LEVEL_SCENE_PATH: String = "scenes/LevelManager.tscn"
 

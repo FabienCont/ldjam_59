@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://cibiws3yctdav"]
+
+[ext_resource type="SpriteFrames" uid="uid://di41qxwdnn75c" path="res://assets/sprites/char_16_16.aseprite" id="1_m18qc"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" unique_id=1062989010]
+sprite_frames = ExtResource("1_m18qc")
+animation = &"Walk"
+autoplay = "Walk"

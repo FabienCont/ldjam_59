@@ -1,13 +1,33 @@
 extends Control
 
 const END_SCENE_PATH: String = "res://scenes/end.tscn"
-@onready var label:Label = $Label 
 @onready var end_menu:Control = $EndMenu
 @onready var viewport  :SubViewport = $SubViewportContainer/SubViewport
 
-var eventIndex: int = -1
-var eventLastVec: Vector2
-var relativeVec : Vector2
+@export var turn_label:Label
+@export var button_label  :Label 
+@export var button_speed1  :Button 
+@export var button_speed2  :Button
+@export var button_speed4  :Button
+@export var skip_turn_button  :Button
+
+var speed: float = 1.0:
+	set= set_speed
+
+func _ready() -> void:
+	button_speed1.pressed.connect( _on_speed1_pressed)
+	button_speed2.pressed.connect( _on_speed2_pressed)
+	button_speed4.pressed.connect( _on_speed4_pressed)
+	skip_turn_button.pressed.connect(skip_turn)
+	GameManager.setup()
+	load_level()
+	GameManager.game_finished.connect(_on_game_finish)
+	SceneManager.preload_scene(END_SCENE_PATH)
+	end_menu.visible = false
+	pass
+
+func _process(_delta: float) -> void:
+	turn_label.text = "Turn : "+str(GameManager.turn)
 
 func load_level() -> void:
 	var level_string = GameManager.get_next_level()
@@ -20,44 +40,35 @@ func load_level() -> void:
 		var packed_scene: PackedScene = load(END_SCENE_PATH)
 		add_child(packed_scene.instantiate())
 
-func _handle_input(event) -> void:
-	relativeVec = Vector2(0.0, 0.0)
-	relativeVec.x = event.position.x - eventLastVec.x
-	relativeVec.y = event.position.y - eventLastVec.y
-	eventLastVec.x = event.position.x
-	eventLastVec.y = event.position.y
-	DragAutoload.drag_vector =relativeVec
-	DragAutoload.is_dragging =true
-	
-func _input(event) -> void:
-	if event is InputEventScreenTouch:
-		if event.pressed:
-			eventIndex = event.index # use the last finger for moving the camera
-			eventLastVec.x = event.position.x
-			eventLastVec.y = event.position.y
-		elif not event.pressed:
-			eventIndex = -1
-			relativeVec = Vector2(0,0)
-			DragAutoload.drag_vector =relativeVec
-			DragAutoload.is_dragging =false
-	elif event is InputEventScreenDrag:
-		if event.index != eventIndex: return
-		_handle_input(event)
-
-
-func _ready() -> void:
-	GameManager.setup()
-	load_level()
-	GameManager.game_finished.connect(_on_game_finish)
-	#SceneManager.preload_scene(END_SCENE_PATH)
-	end_menu.visible = false
-	pass
-
-func _process(_delta: float) -> void:
-	label.text = "Turn : "+str(GameManager.turn)
-	
 func _on_game_finish() -> void:
 	if GameManager.is_last_level():
 
 		return
 	end_menu.visible = true
+
+func _on_speed1_pressed() -> void:
+	speed = 1.0
+	button_label.text = "Speed: x1"
+	button_speed1.visible = false
+	button_speed2.visible = true
+	button_speed4.visible = true
+
+func _on_speed2_pressed() -> void:
+	speed = 2.0
+	button_label.text = "Speed: x2"
+	button_speed1.visible = true
+	button_speed2.visible = false
+	button_speed4.visible = true
+
+func _on_speed4_pressed() -> void:
+	speed = 4.0
+	button_label.text = "Speed: x4"
+	button_speed1.visible = true
+	button_speed2.visible = true
+	button_speed4.visible = false
+
+func set_speed(value: float) -> void:
+	Engine.time_scale = value
+
+func skip_turn() -> void:
+	pass

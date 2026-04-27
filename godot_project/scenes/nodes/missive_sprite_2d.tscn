@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://5f1n5jrxkl3g"]
+
+[ext_resource type="SpriteFrames" uid="uid://ky3o6uq5mjt5" path="res://assets/sprites/missive.aseprite" id="1_jyv7u"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" unique_id=148164527]
+sprite_frames = ExtResource("1_jyv7u")
+autoplay = "default"

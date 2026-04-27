@@ -2,18 +2,15 @@ class_name KingdomsPathSolver
 
 static func get_shortest_command(castle: KingdomDefinitionResource, kingdomDeparture: KingdomDefinitionResource, kingdomDestination: KingdomDefinitionResource, indexPlayer: int) -> BaseCommandResource:
 	if kingdomDeparture == castle:
-		print("get_shortest_command for soldier")
 		var road_path = get_shortest_path(kingdomDeparture, kingdomDestination, indexPlayer)
 		if road_path.size() ==0: 
 			return null
 		return SoldierCommandResource.new(kingdomDeparture, kingdomDestination, indexPlayer, road_path)
 	else:
-		print("get_shortest_command for missive"+str(castle)+" "+str(kingdomDeparture)+" "+str(kingdomDestination))
 		var road_path_missive = get_shortest_path(castle, kingdomDeparture, indexPlayer)
 		if road_path_missive.size() ==0: 
 			return null
 			
-		print("get_shortest_command for soldier")
 		var road_path_troops = get_shortest_path(kingdomDeparture, kingdomDestination, indexPlayer)
 		if road_path_troops.size() ==0: 
 			return null

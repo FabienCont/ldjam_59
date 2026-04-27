@@ -10,6 +10,29 @@ extends Node2D
 @onready var handler_nodes = []
 @onready var handler_nodes_finished = []
 @onready var handler_nodes_next_round = []
+@onready var highlight_path_missive = []:
+	set= set_highlight_path_missive
+@onready var highlight_path_soldier = []:
+	set= set_highlight_path_soldier
+
+var preview_play: PreviewPlay = PreviewPlay.new()
+var _click_consumed_by_kingdom := false
+
+var hovered_command: BaseCommandResource = null:
+	set = set_hovered_command
+
+func set_hovered_command(value: BaseCommandResource) -> void:
+	hovered_command = value
+	highlight_path_soldier = []
+	highlight_path_missive = []
+	preview_play.stop()
+	if not value:
+		return
+	if value.road_path_soldier:
+		highlight_path_soldier = value.road_path_soldier
+	if value is MissiveCommandResource and value.road_path_missive:
+		highlight_path_missive = value.road_path_missive
+	preview_play.play(value, self)
 
 func _ready() -> void:
 	var dicoKingdomNeighbours: Dictionary[Node,Array] = {}
@@ -72,15 +95,44 @@ func reset_highlight():
 	for kingdom in kingdomHighlighted:
 		kingdom.highlight_state = KingdomNode.HighlightState.NONE
 	kingdomHighlighted = []
+	hovered_command = null
 	if kingdom_selected:
 		kingdom_selected.highlight_state = KingdomNode.HighlightState.NONE
 		kingdom_selected = null
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		_click_consumed_by_kingdom = false
+		call_deferred("_on_click_deferred")
+
+func _on_click_deferred() -> void:
+	if not _click_consumed_by_kingdom:
+		reset_highlight()
+
+func set_highlight_path_soldier(value):
+	highlight_path_soldier = value
+	for kingdom in highlight_path_soldier:
+		if kingdom.kingdomNode == kingdom_selected:
+			continue
+		if kingdom.kingdomNode not in kingdomHighlighted:
+			kingdom.kingdomNode.highlight_state = KingdomNode.HighlightState.HIGHLIGHT_ARRIVED
+			kingdomHighlighted.append(kingdom.kingdomNode)
+
+func set_highlight_path_missive(value):
+	highlight_path_missive = value
+	for kingdom in highlight_path_missive:
+		if kingdom.kingdomNode == kingdom_selected:
+			continue
+		if kingdom.kingdomNode not in kingdomHighlighted:
+			kingdom.kingdomNode.highlight_state = KingdomNode.HighlightState.HIGHLIGHT_ARRIVED
+			kingdomHighlighted.append(kingdom.kingdomNode)
 
 func reset_highlight_except_selected():
 	for kingdom in kingdomHighlighted:
 		if kingdom != kingdom_selected:
 			kingdom.highlight_state = KingdomNode.HighlightState.NONE
 	kingdomHighlighted = []
+	hovered_command = null
 
 func on_kingdom_hovered(kingdom_node: KingdomNode) -> void:
 	if GameManager.turn_state ==GameManager.TurnState.PLAYING or GameManager.game_state == GameManager.GameState.FINISH :
@@ -89,29 +141,13 @@ func on_kingdom_hovered(kingdom_node: KingdomNode) -> void:
 		kingdom_node.highlight_state = KingdomNode.HighlightState.HIGHLIGHT_ARRIVED
 		kingdomHighlighted.append(kingdom_node)
 		return
-	if kingdom_selected:
-		var shortest_command = KingdomsPathSolver.get_shortest_command(kingdoms[0],kingdom_selected.kingdom,kingdom_node.kingdom,indexPlayer)
-		if not shortest_command:
-			return
-		
-		if shortest_command.road_path_soldier:
-			for kingdom in shortest_command.road_path_soldier:
-				if kingdom.kingdomNode == kingdom_selected:
-					continue
-				if kingdom.kingdomNode not in kingdomHighlighted:
-					kingdom.kingdomNode.highlight_state = KingdomNode.HighlightState.HIGHLIGHT_ARRIVED
-					kingdomHighlighted.append(kingdom.kingdomNode)
-		
-		if shortest_command is MissiveCommandResource:
-			if shortest_command.road_path_missive:
-				for kingdom in shortest_command.road_path_missive:
-					if kingdom.kingdomNode == kingdom_selected:
-						continue
-					if kingdom.kingdomNode not in kingdomHighlighted:
-						kingdom.kingdomNode.highlight_state = KingdomNode.HighlightState.HIGHLIGHT_ARRIVED
-						kingdomHighlighted.append(kingdom.kingdomNode)
+	if not kingdom_selected:
+		return
 
-
+	var shortest_command = KingdomsPathSolver.get_shortest_command(kingdoms[0],kingdom_selected.kingdom,kingdom_node.kingdom,indexPlayer)
+	if not shortest_command:
+		return
+	hovered_command = shortest_command
 
 func on_kingdom_unhovered(kingdom_node: KingdomNode) -> void:
 	if GameManager.turn_state ==GameManager.TurnState.PLAYING or GameManager.game_state == GameManager.GameState.FINISH :
@@ -121,15 +157,19 @@ func on_kingdom_unhovered(kingdom_node: KingdomNode) -> void:
 	reset_highlight_except_selected()
 
 func select_kingdom(kingdom_node: KingdomNode)-> void:
+	_click_consumed_by_kingdom = true
 	if GameManager.turn_state ==GameManager.TurnState.PLAYING or GameManager.game_state == GameManager.GameState.FINISH :
 		return
+		
 	if kingdom_selected == kingdom_node:
 		reset_highlight()
 		return
+
 	if kingdom_selected == null and kingdom_node.kingdom.owner_index == indexPlayer:
 		kingdom_selected = kingdom_node
 		kingdom_node.highlight_state = KingdomNode.HighlightState.SELECTED
 		return
+
 	elif kingdom_selected != null and kingdom_node != kingdom_selected:
 		var shortest_command = KingdomsPathSolver.get_shortest_command(kingdoms[0],kingdom_selected.kingdom,kingdom_node.kingdom,indexPlayer)
 		print("shortest_command"+str(shortest_command))
