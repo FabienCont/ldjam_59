@@ -3,13 +3,9 @@ extends Node2D
 
 @onready var kingdoms_node: Node2D = $Kingdoms
 @onready var roads_node: Node2D = $Roads
-@onready var kingdoms: Array[KingdomDefinitionResource] = []
 @onready var indexPlayer:int = 0
 @onready var kingdom_selected:KingdomNode = null
 @onready var kingdomHighlighted:Array[KingdomNode] = []
-@onready var handler_nodes = []
-@onready var handler_nodes_finished = []
-@onready var handler_nodes_next_round = []
 @onready var highlight_path_missive = []:
 	set= set_highlight_path_missive
 @onready var highlight_path_soldier = []:
@@ -20,19 +16,6 @@ var _click_consumed_by_kingdom := false
 
 var hovered_command: BaseCommandResource = null:
 	set = set_hovered_command
-
-func set_hovered_command(value: BaseCommandResource) -> void:
-	hovered_command = value
-	highlight_path_soldier = []
-	highlight_path_missive = []
-	preview_play.stop()
-	if not value:
-		return
-	if value.road_path_soldier:
-		highlight_path_soldier = value.road_path_soldier
-	if value is MissiveCommandResource and value.road_path_missive:
-		highlight_path_missive = value.road_path_missive
-	preview_play.play(value, self)
 
 func _ready() -> void:
 	var dicoKingdomNeighbours: Dictionary[Node,Array] = {}
@@ -69,7 +52,7 @@ func _ready() -> void:
 			set_kingdom_info(kingdoms_child_node, true, 1, troups_number,dicoKingdomNeighbours[kingdoms_child_node], dicoKingdomNeighboursRoads[kingdoms_child_node])
 		else:
 			set_kingdom_info(kingdoms_child_node, false,-1, troups_number,dicoKingdomNeighbours[kingdoms_child_node], dicoKingdomNeighboursRoads[kingdoms_child_node])
-		kingdoms.append(kingdoms_child_node.kingdom)
+		GameManager.kingdoms.append(kingdoms_child_node.kingdom)
 		kingdoms_child_node.kingdom_selected.connect(select_kingdom)
 		kingdoms_child_node.kingdom_hovered.connect(on_kingdom_hovered)
 		kingdoms_child_node.kingdom_unhovered.connect(on_kingdom_unhovered)
@@ -91,14 +74,19 @@ func set_kingdom_info(kingdom_node: KingdomNode, is_castle: bool, owner_index: i
 	kingdom_node.kingdom.kingdomNode = kingdom_node
 	kingdom_node.update_texture()
 
-func reset_highlight():
-	for kingdom in kingdomHighlighted:
-		kingdom.highlight_state = KingdomNode.HighlightState.NONE
-	kingdomHighlighted = []
-	hovered_command = null
-	if kingdom_selected:
-		kingdom_selected.highlight_state = KingdomNode.HighlightState.NONE
-		kingdom_selected = null
+
+func set_hovered_command(value: BaseCommandResource) -> void:
+	hovered_command = value
+	highlight_path_soldier = []
+	highlight_path_missive = []
+	preview_play.stop()
+	if not value:
+		return
+	if value.road_path_soldier:
+		highlight_path_soldier = value.road_path_soldier
+	if value is MissiveCommandResource and value.road_path_missive:
+		highlight_path_missive = value.road_path_missive
+	preview_play.play(value, self)
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
@@ -109,6 +97,15 @@ func _on_click_deferred() -> void:
 	if not _click_consumed_by_kingdom:
 		reset_highlight()
 
+func reset_highlight():
+	for kingdom in kingdomHighlighted:
+		kingdom.highlight_state = KingdomNode.HighlightState.NONE
+	kingdomHighlighted = []
+	hovered_command = null
+	if kingdom_selected:
+		kingdom_selected.highlight_state = KingdomNode.HighlightState.NONE
+		kingdom_selected = null
+		
 func set_highlight_path_soldier(value):
 	highlight_path_soldier = value
 	for kingdom in highlight_path_soldier:
@@ -144,7 +141,7 @@ func on_kingdom_hovered(kingdom_node: KingdomNode) -> void:
 	if not kingdom_selected:
 		return
 
-	var shortest_command = KingdomsPathSolver.get_shortest_command(kingdoms[0],kingdom_selected.kingdom,kingdom_node.kingdom,indexPlayer)
+	var shortest_command = KingdomsPathSolver.get_shortest_command(GameManager.kingdoms[0],kingdom_selected.kingdom,kingdom_node.kingdom,indexPlayer)
 	if not shortest_command:
 		return
 	hovered_command = shortest_command
@@ -171,84 +168,10 @@ func select_kingdom(kingdom_node: KingdomNode)-> void:
 		return
 
 	elif kingdom_selected != null and kingdom_node != kingdom_selected:
-		var shortest_command = KingdomsPathSolver.get_shortest_command(kingdoms[0],kingdom_selected.kingdom,kingdom_node.kingdom,indexPlayer)
+		var shortest_command = KingdomsPathSolver.get_shortest_command(GameManager.kingdoms[0],kingdom_selected.kingdom,kingdom_node.kingdom,indexPlayer)
 		print("shortest_command"+str(shortest_command))
 		if not shortest_command:
 			reset_highlight()
 			return
-		send_command(shortest_command)
-		var command = BotUtils.get_command_ia(kingdoms, kingdoms[kingdoms.size() - 1], 1)
-		send_command(command)
+		GameManager.play_command(shortest_command)
 		reset_highlight()
-		GameManager.play_turn()
-
-func send_command(command: BaseCommandResource) -> void:
-	if command is SoldierCommandResource:
-		send_troup(command)
-	elif command is MissiveCommandResource:
-		send_missive(command)
-
-func send_troup(command: SoldierCommandResource) -> void:
-	var troups_scene = SoldierHandlerNode.new()
-	troups_scene.troups = SoldierTroupsResource.new(command.kingdom_node_departure, command.kingdom_node_destination, command.owner_index, ceili(command.kingdom_node_departure.troups_number / 2.0), command.road_path_soldier)
-	add_handler(troups_scene)
-
-func send_missive(command: MissiveCommandResource) -> void:
-	var troups_scene = MissiveHandlerNode.new()
-	troups_scene.troups = MissiveTroupsResource.new(command.kingdom_node_departure, command.kingdom_node_destination, command.owner_index, 1, command.road_path_soldier, command.road_path_missive)
-	add_handler(troups_scene)
-
-func add_handler(troups_scene):
-	if not troups_scene or troups_scene.is_queued_for_deletion():
-		printerr("❌ Error, add_handler is_queued_for_deletion")
-		return 
-
-	handler_nodes.append(troups_scene)
-	troups_scene.finish_turn.connect(on_handler_finish_turn)
-	troups_scene.handler_free.connect(on_handler_free)
-	if troups_scene.has_signal("handler_added"):
-		troups_scene.handler_added.connect(on_handler_added)
-	add_child(troups_scene)
-
-func on_handler_finish_turn(handler):
-	handler_nodes_finished.append(handler)
-	check_end_turn()
-
-func on_handler_added(handler):
-	handler_nodes_next_round.append(handler)
-
-func on_handler_free(handler):
-	var index = handler_nodes.find(handler)
-	if index != -1:
-		handler_nodes.remove_at(index)
-	check_end_turn()
-
-func check_end_turn():
-	var is_turn_finished = handler_nodes_finished.size() == handler_nodes.size()
-	if is_turn_finished:
-		print("turn_finished"+str(is_turn_finished))
-		end_turn()
-		
-func end_turn():
-	handler_nodes_finished = []
-	for handler in handler_nodes_next_round:
-		add_handler(handler)
-	handler_nodes_next_round = []
-	GameManager.end_turn()
-	var is_finish = check_game_finished()
-	if is_finish:
-		return
-	if not is_finish and false:
-		for kingdom in kingdoms:
-			if kingdom.owner_index ==0 or kingdom.owner_index:
-				kingdom.troups_number +=4
-
-func check_game_finished() -> bool:
-	if kingdoms[0].owner_index == 1:
-		GameManager.end_game(1)
-		return true
-	if  kingdoms[kingdoms.size()-1].owner_index == 0 :
-		GameManager.end_game(0)
-		return true
-	return false
-	  

@@ -6,8 +6,8 @@
 [ext_resource type="FontFile" uid="uid://cm2r5kqrngglu" path="res://assets/fonts/Kenney Pixel.ttf" id="3_6rsat"]
 [ext_resource type="Texture2D" uid="uid://bnai1a1wood4f" path="res://assets/sprites/focus.aseprite" id="5_2xhkv"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_3sv3j"]
-size = Vector2(60, 60)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2xhkv"]
+size = Vector2(35, 22)
 
 [node name="KingdomNode" type="Node2D" unique_id=1292490933]
 script = ExtResource("1_moata")
@@ -18,7 +18,7 @@ collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=515594640]
 position = Vector2(0, 6)
-shape = SubResource("RectangleShape2D_3sv3j")
+shape = SubResource("RectangleShape2D_2xhkv")
 
 [node name="FlagNode" parent="." unique_id=2047583726 instance=ExtResource("2_6rsat")]
 position = Vector2(13, -27)

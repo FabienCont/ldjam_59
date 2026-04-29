@@ -21,7 +21,7 @@ func _ready() -> void:
 	skip_turn_button.pressed.connect(skip_turn)
 	GameManager.setup()
 	load_level()
-	GameManager.game_finished.connect(_on_game_finish)
+	GameManager.level_finished.connect(_on_level_finish)
 	SceneManager.preload_scene(END_SCENE_PATH)
 	end_menu.visible = false
 	pass
@@ -30,19 +30,17 @@ func _process(_delta: float) -> void:
 	turn_label.text = "Turn : "+str(GameManager.turn)
 
 func load_level() -> void:
-	var level_string = GameManager.get_next_level()
-	if level_string:
-		var packed_scene: PackedScene = load(level_string)
-		viewport.add_child(packed_scene.instantiate())
+	var level = GameManager.get_next_level()
+	if level:
+		viewport.add_child(level)
 	else:
 		print("No more levels to load.")
 		end_menu.visible = true
 		var packed_scene: PackedScene = load(END_SCENE_PATH)
 		add_child(packed_scene.instantiate())
 
-func _on_game_finish() -> void:
-	if GameManager.is_last_level():
-
+func _on_level_finish() -> void:
+	if GameManager.has_no_more_levels():
 		return
 	end_menu.visible = true
 
