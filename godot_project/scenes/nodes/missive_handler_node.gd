@@ -57,6 +57,7 @@ func on_missive_arrived(_missive_node:MissiveNode):
 		var troupsHandler = SoldierHandlerNode.new()
 		var road_path_soldier = troups.road_path_soldier
 		troupsHandler.troups = SoldierTroupsResource.new(road_path_soldier[0], road_path_soldier[road_path_soldier.size()-1], troups.owner_index, ceili(road_path_soldier[0].troups_number / 2.0), road_path_soldier)
+		troupsHandler.troups.road_path_missive = troups.road_path_missive
 		handler_added.emit(troupsHandler)
 		free_handler()
 	else:

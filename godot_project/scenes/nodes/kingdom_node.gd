@@ -10,7 +10,8 @@ signal kingdom_unhovered(kingdom: KingdomNode)
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var sprite_focus: Sprite2D = $Sprite2DFocus
 @onready var flag: FlagNode = $FlagNode
-@onready var area2D: Area2D = $Area2D
+@export var collisionArea2D: Area2D
+@export var inputArea2D: Area2D
 @onready var label: Label = $Label
 @onready var tween: Tween = null
 
@@ -65,10 +66,10 @@ func update_texture():
 		sprite.texture = load("res://assets/sprites/village_01.aseprite")
 
 func _ready() -> void:
-	area2D.mouse_entered.connect(onmouse_entered)
-	area2D.mouse_exited.connect(onmouse_exited)
-	area2D.input_event.connect(on_area_2d_input_event)
-	area2D.area_entered.connect(on_area_entered)
+	inputArea2D.mouse_entered.connect(onmouse_entered)
+	inputArea2D.mouse_exited.connect(onmouse_exited)
+	inputArea2D.input_event.connect(on_area_2d_input_event)
+	collisionArea2D.area_entered.connect(on_area_entered)
 	if(kingdom):
 		kingdom.kingdom_owner_changed.connect(_on_kingdom_owner_changed)
 		kingdom.kingdom_troups_changed.connect(_on_kingdom_troups_changed)

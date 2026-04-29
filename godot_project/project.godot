@@ -24,8 +24,6 @@ AudioManager="*uid://dlyddqdj5gx0v"
 
 [display]
 
-window/size/viewport_width=896
-window/size/viewport_height=504
 window/stretch/mode="canvas_items"
 
 [editor_plugins]
@@ -71,6 +69,7 @@ pointing/emulate_touch_from_mouse=true
 2d_physics/layer_2="missive"
 2d_physics/layer_3="soldier"
 2d_physics/layer_4="kingdom"
+2d_physics/layer_9="input"
 
 [physics]
 

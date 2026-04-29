@@ -2,6 +2,9 @@ extends Node
 
 signal level_finished()
 signal start_new_turn()
+signal turn_ended()
+signal command_selected(command: BaseCommandResource)
+signal command_cancelled()
 enum GameState {
 	NOT_STARTED,
 	STARTED,
@@ -10,19 +13,21 @@ enum GameState {
 
 enum TurnState {
 	PLAYING,
-	WAITING
+	WAITING,
+	COMMAND_SELECTED
 }
 
 @onready var kingdoms: Array[KingdomDefinitionResource] = []
 @onready var game_state: GameState = GameState.NOT_STARTED;
 @onready var turn_state: TurnState = TurnState.WAITING;
-@onready var player_turn: bool = false;
 @onready var turn: int = 0;
 @onready var winner_index: int = 0;
 @onready var current_level: int = -1;
 @onready var levels=['Level0.tscn','Level2.tscn','Level3.tscn','Level1.tscn']
 @onready var turn_controller: TurnController = TurnController.new()
 @onready var level: LevelNode = null
+@onready var indexPlayer:int = 0
+var pending_command: BaseCommandResource = null
 
 func restart_level():
 	setup()
@@ -54,9 +59,9 @@ func setup() -> void:
 	kingdoms = []
 	game_state  = GameState.NOT_STARTED;
 	turn_state  = TurnState.WAITING;
-	player_turn = false;
 	turn= 0;
 	winner_index = 0;
+	pending_command = null;
 	return;
 
 func start_new_level() -> void:	
@@ -68,6 +73,31 @@ func play_command(command: BaseCommandResource) -> void:
 	turn_controller.send_command(bot_command)
 	_play_turn()
 
+func set_pending_command(command: BaseCommandResource) -> void:
+	pending_command = command
+	turn_state = TurnState.COMMAND_SELECTED
+	command_selected.emit(command)
+
+func confirm_command() -> void:
+	if turn_state != TurnState.COMMAND_SELECTED or pending_command == null:
+		return
+	var cmd = pending_command
+	pending_command = null
+	play_command(cmd)
+
+func cancel_command() -> void:
+	if turn_state != TurnState.COMMAND_SELECTED:
+		return
+	pending_command = null
+	turn_state = TurnState.WAITING
+	command_cancelled.emit()
+
+func skip_turn() -> void:
+	if turn_state == TurnState.WAITING:
+		var bot_command = BotUtils.get_command_ia(kingdoms,kingdoms[kingdoms.size() - 1], 1)
+		turn_controller.send_command(bot_command)
+		_play_turn()
+
 func _play_turn() -> void:
 	turn+=1
 	start_new_turn.emit()
@@ -75,6 +105,7 @@ func _play_turn() -> void:
 
 func _end_turn() -> void:
 	turn_state =TurnState.WAITING
+	turn_ended.emit()
 	_check_game_finished()
 	
 func _check_game_finished() -> bool:

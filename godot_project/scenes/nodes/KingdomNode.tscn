@@ -9,14 +9,20 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2xhkv"]
 size = Vector2(35, 22)
 
-[node name="KingdomNode" type="Node2D" unique_id=1292490933]
-script = ExtResource("1_moata")
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fnw5w"]
+size = Vector2(50, 45)
 
-[node name="Area2D" type="Area2D" parent="." unique_id=1659760113]
+[node name="KingdomNode" type="Node2D" unique_id=1292490933 node_paths=PackedStringArray("collisionArea2D", "inputArea2D")]
+script = ExtResource("1_moata")
+collisionArea2D = NodePath("CollisionArea2D")
+inputArea2D = NodePath("InputArea2D")
+
+[node name="CollisionArea2D" type="Area2D" parent="." unique_id=1659760113]
 collision_layer = 8
 collision_mask = 6
+input_pickable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=515594640]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionArea2D" unique_id=515594640]
 position = Vector2(0, 6)
 shape = SubResource("RectangleShape2D_2xhkv")
 
@@ -42,4 +48,10 @@ texture = ExtResource("2_mut08")
 visible = false
 texture = ExtResource("5_2xhkv")
 
-[connection signal="input_event" from="Area2D" to="." method="_on_area_2d_input_event"]
+[node name="InputArea2D" type="Area2D" parent="." unique_id=286478907]
+collision_layer = 256
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InputArea2D" unique_id=861888602]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_fnw5w")

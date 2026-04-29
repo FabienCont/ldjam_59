@@ -6,8 +6,24 @@ const SPEED := 130.0
 const SOLDIER_SCENE = preload("res://scenes/nodes/soldier_sprite_2d.tscn")
 const MISSIVE_SCENE = preload("res://scenes/nodes/missive_sprite_2d.tscn")
 
+enum LineType { MISSIVE, SOLDIER, PAST }
+
+const LINE_COLORS := {
+	LineType.MISSIVE: Color(1.0,  0.85, 0.2,  0.55),
+	LineType.SOLDIER: Color(0.35, 0.65, 1.0,  0.55),
+	LineType.PAST:    Color(0.55, 0.55, 0.55, 0.55),
+}
+const LINE_OFFSETS := {
+	LineType.MISSIVE: -3.0,
+	LineType.SOLDIER:  3.0,
+	LineType.PAST:     0.0,
+}
+
+var draw_lines: bool = false
+
 var _nodes: Array = []
 var _tweens: Array = []
+var _line_nodes: Array = []
 
 func play(command: BaseCommandResource, parent: Node2D) -> void:
 	stop()
@@ -51,6 +67,33 @@ func _loop(marker: Node2D, path: Array, index: int, parent: Node2D, on_loop_end:
 		_tweens.erase(tween)
 		_loop(marker, path, next_index, parent, on_loop_end)
 	)
+func play_paths(missive_path: Array, soldier_path: Array, parent: Node2D) -> void:
+	stop()
+	if missive_path.size() >= 2:
+		_spawn_marker(missive_path, parent, MISSIVE_SCENE, func():
+			if soldier_path.size() >= 2:
+				_spawn_marker(soldier_path, parent, SOLDIER_SCENE, func(): play_paths(missive_path, soldier_path, parent))
+			else:
+				play_paths(missive_path, soldier_path, parent)
+		)
+	elif soldier_path.size() >= 2:
+		_spawn_marker(soldier_path, parent, SOLDIER_SCENE, func(): play_paths(missive_path, soldier_path, parent))
+
+func draw_line(path: Array, type: LineType, parent: Node2D) -> void:
+	if not draw_lines or path.size() < 2:
+		return
+	var line := Line2D.new()
+	line.top_level = true
+	line.z_index = 5
+	line.default_color = LINE_COLORS[type]
+	line.width = 2.0
+	line.begin_cap_mode = Line2D.LINE_CAP_ROUND
+	line.end_cap_mode = Line2D.LINE_CAP_ROUND
+	for kd in path:
+		line.add_point(kd.kingdomNode.global_position + Vector2(0.0, LINE_OFFSETS[type]))
+	parent.add_child(line)
+	_line_nodes.append(line)
+
 func stop() -> void:
 	for t in _tweens:
 		if t:
@@ -60,4 +103,8 @@ func stop() -> void:
 		if is_instance_valid(n) and not n.is_queued_for_deletion():
 			n.queue_free()
 	_nodes.clear()
+	for line in _line_nodes:
+		if is_instance_valid(line) and not line.is_queued_for_deletion():
+			line.queue_free()
+	_line_nodes.clear()
 

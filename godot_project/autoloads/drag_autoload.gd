@@ -26,7 +26,7 @@ func _handle_input(event) -> void:
 	eventLastVec.x = event.position.x
 	eventLastVec.y = event.position.y
 	if _touch_time >= DRAG_DELAY:
-		DragAutoload.drag_vector = relativeVec
+		DragAutoload.drag_vector = relativeVec if DragAutoload.is_dragging else Vector2.ZERO
 		DragAutoload.is_dragging = true
 
 func _get_pinch_distance() -> float:

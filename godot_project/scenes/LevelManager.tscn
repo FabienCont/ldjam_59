@@ -4,7 +4,7 @@
 [ext_resource type="Theme" uid="uid://df7ydgqi56bsa" path="res://resources/theme.tres" id="2_ua5xg"]
 [ext_resource type="PackedScene" uid="uid://bqpcdd7u0wwva" path="res://scenes/menu/menu_end_game.tscn" id="4_rrkdu"]
 
-[node name="LevelManager" type="Control" unique_id=1727170313 node_paths=PackedStringArray("turn_label", "button_label", "button_speed1", "button_speed2", "button_speed4", "skip_turn_button")]
+[node name="LevelManager" type="Control" unique_id=1727170313 node_paths=PackedStringArray("turn_label", "button_label", "button_speed1", "button_speed2", "button_speed4", "skip_turn_button", "command_selected_container", "play_turn_button", "cancel_button", "pending_move_icon")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -18,7 +18,11 @@ button_label = NodePath("MarginContainer/HBoxContainer2/SpeedLabel")
 button_speed1 = NodePath("MarginContainer/HBoxContainer2/Button")
 button_speed2 = NodePath("MarginContainer/HBoxContainer2/Button2")
 button_speed4 = NodePath("MarginContainer/HBoxContainer2/Button3")
-skip_turn_button = NodePath("MarginContainer/SkipButton")
+skip_turn_button = NodePath("MarginContainer/ActionContainer/SkipButton")
+command_selected_container = NodePath("MarginContainer/ActionContainer/CommandSelectedContainer")
+play_turn_button = NodePath("MarginContainer/ActionContainer/CommandSelectedContainer/PlayTurnButton")
+cancel_button = NodePath("MarginContainer/ActionContainer/CommandSelectedContainer/CancelButton")
+pending_move_icon = NodePath("MarginContainer/ActionContainer/CommandSelectedContainer/PendingMoveIcon")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1196891598]
 layout_mode = 1
@@ -32,12 +36,11 @@ mouse_target = true
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=1721416587]
 disable_3d = true
-handle_input_locally = false
 snap_2d_transforms_to_pixel = true
 canvas_item_default_texture_filter = 0
 physics_object_picking = true
-size = Vector2i(896, 504)
-size_2d_override = Vector2i(896, 504)
+size = Vector2i(1152, 648)
+size_2d_override = Vector2i(768, 432)
 size_2d_override_stretch = true
 render_target_update_mode = 4
 
@@ -92,9 +95,37 @@ layout_mode = 2
 theme = ExtResource("2_ua5xg")
 text = "x4"
 
-[node name="SkipButton" type="Button" parent="MarginContainer" unique_id=615642763]
+[node name="ActionContainer" type="VBoxContainer" parent="MarginContainer" unique_id=700000001]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
+mouse_filter = 0
+alignment = 2
+
+[node name="SkipButton" type="Button" parent="MarginContainer/ActionContainer" unique_id=615642763]
+layout_mode = 2
 theme = ExtResource("2_ua5xg")
 text = "Skip turn"
+
+[node name="CommandSelectedContainer" type="HBoxContainer" parent="MarginContainer/ActionContainer" unique_id=700000002]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="PendingMoveIcon" type="TextureRect" parent="MarginContainer/ActionContainer/CommandSelectedContainer" unique_id=700000003]
+texture_filter = 1
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_vertical = 4
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PlayTurnButton" type="Button" parent="MarginContainer/ActionContainer/CommandSelectedContainer" unique_id=700000004]
+layout_mode = 2
+theme = ExtResource("2_ua5xg")
+text = "Play Turn"
+
+[node name="CancelButton" type="Button" parent="MarginContainer/ActionContainer/CommandSelectedContainer" unique_id=700000005]
+layout_mode = 2
+theme = ExtResource("2_ua5xg")
+text = "Cancel"
