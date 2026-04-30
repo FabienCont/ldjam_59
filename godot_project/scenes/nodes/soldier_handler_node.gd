@@ -11,11 +11,18 @@ signal handler_free(node:SoldierHandlerNode)
 
 func _ready() -> void:
 	GameManager.start_new_turn.connect(play_turn)
+	GameManager.turn_ended.connect(on_turn_ended)
+	var kingdom_departure = troups.road_path_soldier[troups.step]
+	troups.quantity = ceili(kingdom_departure.troups_number / 2.0)
+
+func on_turn_ended() -> void:
+	if is_queued_for_deletion():
+		return
+	troups.step += 1
 
 func play_turn() -> void:
 	if is_queued_for_deletion():
 		return
-	troups.step += 1
 	if troups.step+1 > troups.road_path_soldier.size()-1 :
 		printerr("❌ SoldierHandlerNode: Erreur de calcul de step")
 		free_handler()

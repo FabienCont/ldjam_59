@@ -2,7 +2,7 @@ class_name TroupsDefinitionResource
 extends Resource
 
 var quantity: int;
-var step: int = -1;
+var step: int = 0;
 
 var kingdom_departure: KingdomDefinitionResource
 var kingdom_destination: KingdomDefinitionResource

@@ -49,12 +49,12 @@ func on_handler_free(handler):
 func check_end_turn():
 	var is_turn_finished = handler_nodes_finished.size() == handler_nodes.size()
 	if is_turn_finished:
-		print("turn_finished"+str(is_turn_finished))
 		end_turn()
 		
 func end_turn():
 	handler_nodes_finished = []
-	for handler in handler_nodes_next_round:
-		add_handler(handler)
+	var next_round := handler_nodes_next_round.duplicate()
 	handler_nodes_next_round = []
 	GameManager._end_turn()
+	for handler in next_round:
+		add_handler(handler)

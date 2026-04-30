@@ -2,7 +2,14 @@
 
 [ext_resource type="Script" uid="uid://by7jhm84m0us0" path="res://scenes/level_manager.gd" id="1_ua5xg"]
 [ext_resource type="Theme" uid="uid://df7ydgqi56bsa" path="res://resources/theme.tres" id="2_ua5xg"]
+[ext_resource type="Shader" uid="uid://boptwmw75bocf" path="res://assets/shader/pending_move.gdshader" id="4_5ptdr"]
 [ext_resource type="PackedScene" uid="uid://bqpcdd7u0wwva" path="res://scenes/menu/menu_end_game.tscn" id="4_rrkdu"]
+[ext_resource type="Texture2D" uid="uid://chf336fnsfprl" path="res://assets/sprites/icon_soldier_16x16.aseprite" id="5_icker"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4wgpk"]
+shader = ExtResource("4_5ptdr")
+shader_parameter/pulse_speed = 2.0
+shader_parameter/tint_color = Color(0.85258347, 0.8637014, 0.8581495, 1)
 
 [node name="LevelManager" type="Control" unique_id=1727170313 node_paths=PackedStringArray("turn_label", "button_label", "button_speed1", "button_speed2", "button_speed4", "skip_turn_button", "command_selected_container", "play_turn_button", "cancel_button", "pending_move_icon")]
 layout_mode = 3
@@ -36,6 +43,7 @@ mouse_target = true
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=1721416587]
 disable_3d = true
+handle_input_locally = false
 snap_2d_transforms_to_pixel = true
 canvas_item_default_texture_filter = 0
 physics_object_picking = true
@@ -65,7 +73,7 @@ layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme = ExtResource("2_ua5xg")
-theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
 text = "Turn:"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer" unique_id=1727387438]
@@ -108,15 +116,16 @@ theme = ExtResource("2_ua5xg")
 text = "Skip turn"
 
 [node name="CommandSelectedContainer" type="HBoxContainer" parent="MarginContainer/ActionContainer" unique_id=700000002]
-visible = false
 layout_mode = 2
 theme_override_constants/separation = 8
 
 [node name="PendingMoveIcon" type="TextureRect" parent="MarginContainer/ActionContainer/CommandSelectedContainer" unique_id=700000003]
 texture_filter = 1
+material = SubResource("ShaderMaterial_4wgpk")
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 size_flags_vertical = 4
+texture = ExtResource("5_icker")
 expand_mode = 1
 stretch_mode = 5
 

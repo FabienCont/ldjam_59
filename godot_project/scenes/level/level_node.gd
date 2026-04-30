@@ -5,8 +5,6 @@ extends Node2D
 @onready var roads_node: Node2D = $Roads
 var highlight_controller := HighlightController.new()
 var incoming_units_controller := IncomingUnitsController.new()
-
-var preview_play: PreviewPlay = PreviewPlay.new()
 var _click_consumed_by_kingdom := false
 
 func _ready() -> void:
@@ -17,7 +15,7 @@ func _ready() -> void:
 		kingdoms_child_node.kingdom_selected.connect(select_kingdom)
 		kingdoms_child_node.kingdom_hovered.connect(on_kingdom_hovered)
 		kingdoms_child_node.kingdom_unhovered.connect(on_kingdom_unhovered)
-	highlight_controller.setup(preview_play, self)
+	highlight_controller.setup(incoming_units_controller, self)
 	incoming_units_controller.setup(GameManager.turn_controller)
 	GameManager.command_cancelled.connect(highlight_controller.reset_highlight)
 	GameManager.start_new_turn.connect(highlight_controller.reset_highlight)
@@ -30,6 +28,9 @@ func _input(event: InputEvent) -> void:
 func _on_click_deferred() -> void:
 	if not _click_consumed_by_kingdom and GameManager.turn_state != GameManager.TurnState.COMMAND_SELECTED:
 		highlight_controller.reset_highlight()
+	if not incoming_units_controller.icon_click_consumed:
+		incoming_units_controller.clear_preview()
+	incoming_units_controller.icon_click_consumed = false
 
 func on_kingdom_hovered(kingdom_node: KingdomNode) -> void:
 	if GameManager.turn_state ==GameManager.TurnState.PLAYING or GameManager.turn_state == GameManager.TurnState.COMMAND_SELECTED or GameManager.game_state == GameManager.GameState.FINISH :

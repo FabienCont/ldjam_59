@@ -11,12 +11,17 @@ signal handler_added(node:SoldierHandlerNode)
 
 func _ready() -> void:
 	GameManager.start_new_turn.connect(play_turn)
+	GameManager.turn_ended.connect(on_turn_ended)
+
+func on_turn_ended() -> void:
+	if is_queued_for_deletion():
+		return
+	troups.step += 1
 
 func play_turn() -> void:
 	if is_queued_for_deletion():
 		return
-	troups.spawned_quantity =0
-	troups.step += 1
+	troups.spawned_quantity = 0
 	if troups.step+1 > troups.road_path_missive.size()-1 :
 		printerr("❌ MissiveHandlerNode: Erreur de calcul de step")
 		free_handler()

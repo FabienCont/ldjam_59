@@ -14,12 +14,11 @@ func _ready():
 	retry_button.pressed.connect(_on_button_retry_pressed)
 	next_button.pressed.connect(_on_button_next_level_pressed)
 	return_button.pressed.connect(_on_button_menu_pressed)
-	
-	if GameManager.winner_index == 0:
-		label.text = "YOU WON !"
-	else:
-		label.text = "YOU LOST !"
+	visibility_changed.connect(_on_visibility_changed)
+	_update_label_winner()
 
+func _on_visibility_changed():
+	_update_label_winner()
 
 func _on_button_next_level_pressed() -> void:
 	await SceneManager.change_scene_with_path(LEVEL_SCENE_PATH)
@@ -30,3 +29,9 @@ func _on_button_menu_pressed() -> void:
 func _on_button_retry_pressed() -> void:
 	GameManager.current_level -=1
 	await SceneManager.change_scene_with_path(LEVEL_SCENE_PATH)
+
+func _update_label_winner():
+	if GameManager.winner_index == 0:
+		label.text = "YOU WON !"
+	else:
+		label.text = "YOU LOST !"

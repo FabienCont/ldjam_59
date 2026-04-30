@@ -69,7 +69,6 @@ func _process(delta: float) -> void:
 	elif Input.is_action_just_pressed("zoom_out"):
 		_set_zoom_level(_zoom_level + zoom_factor)
 	elif DragAutoload.is_pinching and DragAutoload.pinch_zoom_delta != 0.0:
-		print("Pinch zooming")
 		_set_zoom_level(_zoom_level - DragAutoload.pinch_zoom_delta * pinch_zoom_sensitivity)
 		DragAutoload.pinch_zoom_delta = 0.0
 	elif DragAutoload.is_dragging:

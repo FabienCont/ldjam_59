@@ -52,7 +52,6 @@ func load_level() -> void:
 	if level:
 		viewport.add_child(level)
 	else:
-		print("No more levels to load.")
 		end_menu.visible = true
 		var packed_scene: PackedScene = load(END_SCENE_PATH)
 		add_child(packed_scene.instantiate())
@@ -100,9 +99,10 @@ func _on_turn_state_changed() -> void:
 	_update_action_buttons()
 
 func _update_action_buttons() -> void:
+	var is_playing := GameManager.turn_state == GameManager.TurnState.PLAYING
 	var is_command_selected := GameManager.turn_state == GameManager.TurnState.COMMAND_SELECTED
-	skip_turn_button.visible = not is_command_selected
-	command_selected_container.visible = is_command_selected
+	skip_turn_button.visible = not is_command_selected and not is_playing
+	command_selected_container.visible = is_command_selected and not is_playing
 
 func _on_play_turn_pressed() -> void:
 	GameManager.confirm_command()

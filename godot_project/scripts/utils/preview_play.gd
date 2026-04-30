@@ -19,14 +19,14 @@ const LINE_OFFSETS := {
 	LineType.PAST:     0.0,
 }
 
-var draw_lines: bool = false
+var draw_lines: bool = true
 
 var _nodes: Array = []
 var _tweens: Array = []
 var _line_nodes: Array = []
 
 func play(command: BaseCommandResource, parent: Node2D) -> void:
-	stop()
+	_stop_markers()
 	if command is MissiveCommandResource and command.road_path_missive.size() >= 2:
 		_spawn_marker(command.road_path_missive, parent, MISSIVE_SCENE, func():
 			if command.road_path_soldier.size() >= 2:
@@ -68,7 +68,7 @@ func _loop(marker: Node2D, path: Array, index: int, parent: Node2D, on_loop_end:
 		_loop(marker, path, next_index, parent, on_loop_end)
 	)
 func play_paths(missive_path: Array, soldier_path: Array, parent: Node2D) -> void:
-	stop()
+	_stop_markers()
 	if missive_path.size() >= 2:
 		_spawn_marker(missive_path, parent, MISSIVE_SCENE, func():
 			if soldier_path.size() >= 2:
@@ -78,6 +78,8 @@ func play_paths(missive_path: Array, soldier_path: Array, parent: Node2D) -> voi
 		)
 	elif soldier_path.size() >= 2:
 		_spawn_marker(soldier_path, parent, SOLDIER_SCENE, func(): play_paths(missive_path, soldier_path, parent))
+
+
 
 func draw_line(path: Array, type: LineType, parent: Node2D) -> void:
 	if not draw_lines or path.size() < 2:
@@ -95,6 +97,13 @@ func draw_line(path: Array, type: LineType, parent: Node2D) -> void:
 	_line_nodes.append(line)
 
 func stop() -> void:
+	_stop_markers()
+	for line in _line_nodes:
+		if is_instance_valid(line) and not line.is_queued_for_deletion():
+			line.queue_free()
+	_line_nodes.clear()
+
+func _stop_markers() -> void:
 	for t in _tweens:
 		if t:
 			t.kill()
@@ -103,8 +112,4 @@ func stop() -> void:
 		if is_instance_valid(n) and not n.is_queued_for_deletion():
 			n.queue_free()
 	_nodes.clear()
-	for line in _line_nodes:
-		if is_instance_valid(line) and not line.is_queued_for_deletion():
-			line.queue_free()
-	_line_nodes.clear()
 

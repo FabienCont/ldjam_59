@@ -3,6 +3,7 @@ extends TextureRect
 
 signal icon_hovered(icon: IncomingUnitIcon)
 signal icon_unhovered(icon: IncomingUnitIcon)
+signal icon_clicked(icon: IncomingUnitIcon)
 
 @export var quantity_label: Label;
 @export var turn_label: Label;
@@ -22,3 +23,6 @@ func _setup_area() -> void:
 	add_child(area)
 	area.mouse_entered.connect(func(): icon_hovered.emit(self))
 	area.mouse_exited.connect(func(): icon_unhovered.emit(self))
+	area.input_event.connect(func(_viewport, event, _shape_idx):
+		if event is InputEventScreenTouch and event.pressed:
+			icon_clicked.emit(self))

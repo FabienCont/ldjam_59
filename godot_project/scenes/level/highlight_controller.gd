@@ -10,12 +10,12 @@ var highlight_path_soldier = []:
 var hovered_command: BaseCommandResource = null:
 	set = set_hovered_command
 
-var _preview_play: PreviewPlay
+var _incoming_units_controller: IncomingUnitsController
 var _level_node: Node2D
 
 
-func setup(preview_play: PreviewPlay, level_node: Node2D) -> void:
-	_preview_play = preview_play
+func setup(incoming_units_controller: IncomingUnitsController, level_node: Node2D) -> void:
+	_incoming_units_controller = incoming_units_controller
 	_level_node = level_node
 
 
@@ -23,14 +23,14 @@ func set_hovered_command(value: BaseCommandResource) -> void:
 	hovered_command = value
 	highlight_path_soldier = []
 	highlight_path_missive = []
-	_preview_play.stop()
+	_incoming_units_controller.hide_command_preview()
 	if not value:
 		return
 	if value.road_path_soldier:
 		highlight_path_soldier = value.road_path_soldier
 	if value is MissiveCommandResource and value.road_path_missive:
 		highlight_path_missive = value.road_path_missive
-	_preview_play.play(value, _level_node)
+	_incoming_units_controller.show_command_preview(value, _level_node)
 
 
 func reset_highlight() -> void:

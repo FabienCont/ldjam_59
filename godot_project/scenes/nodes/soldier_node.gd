@@ -57,7 +57,6 @@ func die():
 	queue_free()
 
 func arrive():
-	print("arrived")
 	if _resolved:
 		return
 	_resolved = true
@@ -65,9 +64,7 @@ func arrive():
 	queue_free()
 
 func on_collide(area: Area2D):
-	print("soldier collide with ", area)
 	var unit = area.get_parent()
-	print("soldier collide with unit ", unit)
 	if unit is KingdomNode:
 		printerr("❌ soldier collide with kingdom")
 		return

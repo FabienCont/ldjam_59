@@ -100,8 +100,8 @@ func skip_turn() -> void:
 
 func _play_turn() -> void:
 	turn+=1
+	turn_state = TurnState.PLAYING
 	start_new_turn.emit()
-	turn_state =TurnState.PLAYING
 
 func _end_turn() -> void:
 	turn_state =TurnState.WAITING
