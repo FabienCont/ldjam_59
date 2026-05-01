@@ -10,10 +10,12 @@ config_version=5
 
 [application]
 
-config/name="ldjam_59"
+config/name="The homing crows"
 run/main_scene="uid://dhbjmrch4cmmd"
 config/features=PackedStringArray("4.6", "GL Compatibility")
-config/icon="res://icon.svg"
+boot_splash/bg_color=Color(0, 0, 0, 1)
+boot_splash/image="uid://svkwqd7i6mxy"
+config/icon="uid://bjhkood4a0e2f"
 
 [autoload]
 
@@ -24,7 +26,16 @@ AudioManager="*uid://dlyddqdj5gx0v"
 
 [display]
 
+window/size/mode=3
 window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/stretch/scale_mode="fractional"
+window/handheld/orientation=0
+mouse_cursor/custom_image="uid://d3d3m83177esu"
+mouse_cursor/custom_image_hotspot=Vector2(7, 0)
+environment/defaults/default_clear_color=Color(0, 0, 0, 1)
+window/size/width=1152
+window/size/height=648
 
 [editor_plugins]
 

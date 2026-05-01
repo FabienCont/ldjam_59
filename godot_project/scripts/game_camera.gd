@@ -23,6 +23,7 @@ extends Camera2D
 var _zoom_level := 1.3
 var _drag_velocity := Vector2.ZERO
 var _follow_delay_timer := 0.0
+var _is_mobile := false
 
 @onready var tween: Tween
 
@@ -32,6 +33,7 @@ func _ready() -> void:
 	drag_right_margin = 0.0
 	drag_top_margin = 0.0
 	drag_bottom_margin = 0.0
+	_is_mobile = OS.has_feature("mobile") or (OS.has_feature("web") and DisplayServer.is_touchscreen_available())
 
 ## Returns follow margins in world pixels based on viewport ratio and current zoom.
 func _follow_margins() -> Dictionary:
@@ -69,7 +71,8 @@ func _process(delta: float) -> void:
 	elif Input.is_action_just_pressed("zoom_out"):
 		_set_zoom_level(_zoom_level + zoom_factor)
 	elif DragAutoload.is_pinching and DragAutoload.pinch_zoom_delta != 0.0:
-		_set_zoom_level(_zoom_level - DragAutoload.pinch_zoom_delta * pinch_zoom_sensitivity)
+		_zoom_level = clamp(_zoom_level - DragAutoload.pinch_zoom_delta * pinch_zoom_sensitivity, min_zoom, max_zoom)
+		zoom = Vector2(_zoom_level, _zoom_level)
 		DragAutoload.pinch_zoom_delta = 0.0
 	elif DragAutoload.is_dragging:
 		_follow_delay_timer = 0.0
@@ -77,7 +80,7 @@ func _process(delta: float) -> void:
 		DragAutoload.drag_vector = Vector2.ZERO
 	else:
 		_drag_velocity = lerp(_drag_velocity, Vector2.ZERO, real_delta * drag_friction)
-		if DragAutoload.eventIndex == -1:
+		if DragAutoload.eventIndex == -1 and not _is_mobile:
 			_process_edge_scroll(real_delta)
 		if debug_zones:
 			queue_redraw()

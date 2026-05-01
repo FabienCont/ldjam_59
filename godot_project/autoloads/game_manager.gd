@@ -1,5 +1,7 @@
 extends Node
 
+const CURSOR_TEXTURE = preload("res://assets/cursor.svg")
+
 signal level_finished()
 signal start_new_turn()
 signal turn_ended()
@@ -28,6 +30,10 @@ enum TurnState {
 @onready var level: LevelNode = null
 @onready var indexPlayer:int = 0
 var pending_command: BaseCommandResource = null
+
+func _ready() -> void:
+	if not DisplayServer.is_touchscreen_available():
+		Input.set_custom_mouse_cursor(CURSOR_TEXTURE, Input.CURSOR_ARROW, Vector2.ZERO)
 
 func restart_level():
 	setup()

@@ -10,7 +10,7 @@
 size = Vector2(35, 22)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fnw5w"]
-size = Vector2(50, 45)
+size = Vector2(50, 50)
 
 [node name="KingdomNode" type="Node2D" unique_id=1292490933 node_paths=PackedStringArray("collisionArea2D", "inputArea2D")]
 script = ExtResource("1_moata")

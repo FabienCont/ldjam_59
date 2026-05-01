@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://0tjyg7bu5ijr"
-path="res://.godot/imported/Hex Full Tiles Logo.png-35266b4903d5623c4c35cdddb01e5d1d.ctex"
+uid="uid://bjhkood4a0e2f"
+path="res://.godot/imported/icon_missive_64.png-dba627dd7bc0d4084c2722e37c25dbf5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Hex Full Tiles Logo.png"
-dest_files=["res://.godot/imported/Hex Full Tiles Logo.png-35266b4903d5623c4c35cdddb01e5d1d.ctex"]
+source_file="res://assets/export_images/icon_missive_64.png"
+dest_files=["res://.godot/imported/icon_missive_64.png-dba627dd7bc0d4084c2722e37c25dbf5.ctex"]
 
 [params]
 

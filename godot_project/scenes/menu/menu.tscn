@@ -16,15 +16,17 @@ script = ExtResource("1_j0t7f")
 start_button = NodePath("CenterContainer/VBoxContainer/CenterContainer/StartButton")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=2066593617]
+clip_contents = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = 5.9819336
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_037ec")
 expand_mode = 3
-stretch_mode = 4
+stretch_mode = 5
 
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=755194006]
 layout_mode = 1

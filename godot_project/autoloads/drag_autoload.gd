@@ -64,7 +64,7 @@ func _input(event) -> void:
 			_touch_points[event.index] = event.position
 		if is_pinching and _touch_points.size() == 2:
 			var new_distance := _get_pinch_distance()
-			pinch_zoom_delta = new_distance - _last_pinch_distance
+			pinch_zoom_delta += new_distance - _last_pinch_distance
 			_last_pinch_distance = new_distance
 			return
 		if event.index != eventIndex: return

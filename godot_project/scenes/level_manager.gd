@@ -5,8 +5,8 @@ const SOLDIER_TEXTURE = preload("res://assets/sprites/icon_soldier_16x16.aseprit
 const MISSIVE_TEXTURE = preload("res://assets/sprites/icon_missive_16x16.aseprite")
 const PENDING_SHADER = preload("res://assets/shader/pending_move.gdshader")
 
-@onready var end_menu:Control = $EndMenu
-@onready var viewport  :SubViewport = $SubViewportContainer/SubViewport
+@export var end_menu:Control 
+@export var viewport  :SubViewport 
 
 @export var turn_label:Label
 @export var button_label  :Label 

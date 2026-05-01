@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cinoofd3plrj5"
-path="res://.godot/imported/Brick Dual Vert Flat - 48x64.png-43bf300a5661eecbeab13b0fb56091a2.ctex"
+uid="uid://dckut4hgqi6cw"
+path="res://.godot/imported/pointer.png-9c542ac81d514f3514d7afb1378171d5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Brick Dual Vert Flat - 48x64.png"
-dest_files=["res://.godot/imported/Brick Dual Vert Flat - 48x64.png-43bf300a5661eecbeab13b0fb56091a2.ctex"]
+source_file="res://assets/sprites/pointer.png"
+dest_files=["res://.godot/imported/pointer.png-9c542ac81d514f3514d7afb1378171d5.ctex"]
 
 [params]
 

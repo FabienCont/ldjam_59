@@ -11,7 +11,7 @@ shader = ExtResource("4_5ptdr")
 shader_parameter/pulse_speed = 2.0
 shader_parameter/tint_color = Color(0.85258347, 0.8637014, 0.8581495, 1)
 
-[node name="LevelManager" type="Control" unique_id=1727170313 node_paths=PackedStringArray("turn_label", "button_label", "button_speed1", "button_speed2", "button_speed4", "skip_turn_button", "command_selected_container", "play_turn_button", "cancel_button", "pending_move_icon")]
+[node name="LevelManager" type="Control" unique_id=1727170313 node_paths=PackedStringArray("end_menu", "viewport", "turn_label", "button_label", "button_speed1", "button_speed2", "button_speed4", "skip_turn_button", "command_selected_container", "play_turn_button", "cancel_button", "pending_move_icon")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,55 +20,53 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 script = ExtResource("1_ua5xg")
-turn_label = NodePath("MarginContainer/TurnLabel")
-button_label = NodePath("MarginContainer/HBoxContainer2/SpeedLabel")
-button_speed1 = NodePath("MarginContainer/HBoxContainer2/Button")
-button_speed2 = NodePath("MarginContainer/HBoxContainer2/Button2")
-button_speed4 = NodePath("MarginContainer/HBoxContainer2/Button3")
-skip_turn_button = NodePath("MarginContainer/ActionContainer/SkipButton")
-command_selected_container = NodePath("MarginContainer/ActionContainer/CommandSelectedContainer")
-play_turn_button = NodePath("MarginContainer/ActionContainer/CommandSelectedContainer/PlayTurnButton")
-cancel_button = NodePath("MarginContainer/ActionContainer/CommandSelectedContainer/CancelButton")
-pending_move_icon = NodePath("MarginContainer/ActionContainer/CommandSelectedContainer/PendingMoveIcon")
+end_menu = NodePath("EndMenu")
+viewport = NodePath("AspectRatioContainer/SubViewportContainer/SubViewport")
+turn_label = NodePath("AspectRatioContainer/MarginContainer/TurnLabel")
+button_label = NodePath("AspectRatioContainer/MarginContainer/HBoxContainer2/SpeedLabel")
+button_speed1 = NodePath("AspectRatioContainer/MarginContainer/HBoxContainer2/Button")
+button_speed2 = NodePath("AspectRatioContainer/MarginContainer/HBoxContainer2/Button2")
+button_speed4 = NodePath("AspectRatioContainer/MarginContainer/HBoxContainer2/Button3")
+skip_turn_button = NodePath("AspectRatioContainer/MarginContainer/ActionContainer/SkipButton")
+command_selected_container = NodePath("AspectRatioContainer/MarginContainer/ActionContainer/CommandSelectedContainer")
+play_turn_button = NodePath("AspectRatioContainer/MarginContainer/ActionContainer/CommandSelectedContainer/PlayTurnButton")
+cancel_button = NodePath("AspectRatioContainer/MarginContainer/ActionContainer/CommandSelectedContainer/CancelButton")
+pending_move_icon = NodePath("AspectRatioContainer/MarginContainer/ActionContainer/CommandSelectedContainer/PendingMoveIcon")
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1196891598]
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="." unique_id=800000001]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+ratio = 1.7778
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="AspectRatioContainer" unique_id=1196891598]
+layout_mode = 2
 stretch = true
 mouse_target = true
 
-[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=1721416587]
+[node name="SubViewport" type="SubViewport" parent="AspectRatioContainer/SubViewportContainer" unique_id=1721416587]
 disable_3d = true
 handle_input_locally = false
 snap_2d_transforms_to_pixel = true
 canvas_item_default_texture_filter = 0
 physics_object_picking = true
-size = Vector2i(1152, 648)
+size = Vector2i(1152, 647)
 size_2d_override = Vector2i(768, 432)
 size_2d_override_stretch = true
 render_target_update_mode = 4
 
-[node name="EndMenu" parent="." unique_id=2093833323 instance=ExtResource("4_rrkdu")]
-layout_mode = 1
-
-[node name="MarginContainer" type="MarginContainer" parent="." unique_id=360535894]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="MarginContainer" type="MarginContainer" parent="AspectRatioContainer" unique_id=360535894]
+layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="TurnLabel" type="Label" parent="MarginContainer" unique_id=1942333632]
+[node name="TurnLabel" type="Label" parent="AspectRatioContainer/MarginContainer" unique_id=1942333632]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
@@ -76,50 +74,50 @@ theme = ExtResource("2_ua5xg")
 theme_override_constants/outline_size = 3
 text = "Turn:"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer" unique_id=1727387438]
+[node name="HBoxContainer2" type="HBoxContainer" parent="AspectRatioContainer/MarginContainer" unique_id=1727387438]
 visible = false
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_constants/separation = 12
 alignment = 2
 
-[node name="SpeedLabel" type="Label" parent="MarginContainer/HBoxContainer2" unique_id=1126863673]
+[node name="SpeedLabel" type="Label" parent="AspectRatioContainer/MarginContainer/HBoxContainer2" unique_id=1126863673]
 layout_mode = 2
 text = "Speed: x1"
 
-[node name="Button" type="Button" parent="MarginContainer/HBoxContainer2" unique_id=1509123726]
+[node name="Button" type="Button" parent="AspectRatioContainer/MarginContainer/HBoxContainer2" unique_id=1509123726]
 visible = false
 layout_mode = 2
 theme = ExtResource("2_ua5xg")
 text = "x1"
 
-[node name="Button2" type="Button" parent="MarginContainer/HBoxContainer2" unique_id=101570079]
+[node name="Button2" type="Button" parent="AspectRatioContainer/MarginContainer/HBoxContainer2" unique_id=101570079]
 layout_mode = 2
 theme = ExtResource("2_ua5xg")
 text = "x2"
 
-[node name="Button3" type="Button" parent="MarginContainer/HBoxContainer2" unique_id=880529416]
+[node name="Button3" type="Button" parent="AspectRatioContainer/MarginContainer/HBoxContainer2" unique_id=880529416]
 layout_mode = 2
 theme = ExtResource("2_ua5xg")
 text = "x4"
 
-[node name="ActionContainer" type="VBoxContainer" parent="MarginContainer" unique_id=700000001]
+[node name="ActionContainer" type="VBoxContainer" parent="AspectRatioContainer/MarginContainer" unique_id=700000001]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
 mouse_filter = 0
 alignment = 2
 
-[node name="SkipButton" type="Button" parent="MarginContainer/ActionContainer" unique_id=615642763]
+[node name="SkipButton" type="Button" parent="AspectRatioContainer/MarginContainer/ActionContainer" unique_id=615642763]
 layout_mode = 2
 theme = ExtResource("2_ua5xg")
 text = "Skip turn"
 
-[node name="CommandSelectedContainer" type="HBoxContainer" parent="MarginContainer/ActionContainer" unique_id=700000002]
+[node name="CommandSelectedContainer" type="HBoxContainer" parent="AspectRatioContainer/MarginContainer/ActionContainer" unique_id=700000002]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="PendingMoveIcon" type="TextureRect" parent="MarginContainer/ActionContainer/CommandSelectedContainer" unique_id=700000003]
+[node name="PendingMoveIcon" type="TextureRect" parent="AspectRatioContainer/MarginContainer/ActionContainer/CommandSelectedContainer" unique_id=700000003]
 texture_filter = 1
 material = SubResource("ShaderMaterial_4wgpk")
 custom_minimum_size = Vector2(32, 32)
@@ -129,12 +127,15 @@ texture = ExtResource("5_icker")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="PlayTurnButton" type="Button" parent="MarginContainer/ActionContainer/CommandSelectedContainer" unique_id=700000004]
+[node name="PlayTurnButton" type="Button" parent="AspectRatioContainer/MarginContainer/ActionContainer/CommandSelectedContainer" unique_id=700000004]
 layout_mode = 2
 theme = ExtResource("2_ua5xg")
 text = "Play Turn"
 
-[node name="CancelButton" type="Button" parent="MarginContainer/ActionContainer/CommandSelectedContainer" unique_id=700000005]
+[node name="CancelButton" type="Button" parent="AspectRatioContainer/MarginContainer/ActionContainer/CommandSelectedContainer" unique_id=700000005]
 layout_mode = 2
 theme = ExtResource("2_ua5xg")
 text = "Cancel"
+
+[node name="EndMenu" parent="." unique_id=2093833323 instance=ExtResource("4_rrkdu")]
+layout_mode = 1
