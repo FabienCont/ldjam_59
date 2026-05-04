@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://c2trwlsw0b2h2"]
+
+[ext_resource type="Script" uid="uid://b8bvcoayg52rx" path="res://scenes/level/level_node.gd" id="1_y47qn"]
+[ext_resource type="PackedScene" uid="uid://c5a0b6xpkofc" path="res://scenes/nodes/KingdomNode.tscn" id="2_u1i37"]
+[ext_resource type="Script" uid="uid://c883qbpgb1yn" path="res://resources/KingdomDefinitionResource.gd" id="3_7rg0v"]
+[ext_resource type="PackedScene" uid="uid://ds3vmve0hgani" path="res://scenes/nodes/roadNode.tscn" id="4_u1i37"]
+
+[sub_resource type="Resource" id="Resource_arc1i"]
+script = ExtResource("3_7rg0v")
+metadata/_custom_type_script = "uid://c883qbpgb1yn"
+
+[sub_resource type="Resource" id="Resource_xmifs"]
+script = ExtResource("3_7rg0v")
+metadata/_custom_type_script = "uid://c883qbpgb1yn"
+
+[node name="EndLevel_tscn" type="Node2D" unique_id=1848706038]
+position = Vector2(74, 84)
+
+[node name="Node2D" type="Node2D" parent="." unique_id=964303783]
+script = ExtResource("1_y47qn")
+
+[node name="Kingdoms" type="Node2D" parent="Node2D" unique_id=2086589287]
+
+[node name="KingdomNode" parent="Node2D/Kingdoms" unique_id=1292490933 instance=ExtResource("2_u1i37")]
+force_unit_number = 1
+kingdom = SubResource("Resource_arc1i")
+
+[node name="KingdomNode2" parent="Node2D/Kingdoms" unique_id=679603111 instance=ExtResource("2_u1i37")]
+position = Vector2(100, 0)
+force_unit_number = 1
+kingdom = SubResource("Resource_xmifs")
+
+[node name="Roads" type="Node2D" parent="Node2D" unique_id=898343084]
+
+[node name="RoadNode" parent="Node2D/Roads" unique_id=218992354 node_paths=PackedStringArray("kingdom_a", "kingdom_b") instance=ExtResource("4_u1i37")]
+kingdom_a = NodePath("../../Kingdoms/KingdomNode")
+kingdom_b = NodePath("../../Kingdoms/KingdomNode2")

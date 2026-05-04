@@ -60,6 +60,8 @@ func set_kingdom(value: KingdomDefinitionResource) -> void:
 	update_texture()
 
 func update_texture():
+	if not sprite or not kingdom:
+		return
 	if kingdom.is_castle == true:
 		sprite.texture = load("res://assets/sprites/castle_01.aseprite")
 	else:
@@ -125,7 +127,7 @@ func soldier_arrived(soldier_node: SoldierNode) -> void:
 		kingdom.troups_number+=1
 		soldier_node.arrive()
 	else:
-		if(kingdom.troups_number <= 0):
+		if(kingdom.troups_number <= 1):
 			kingdom.troups_number=1
 			kingdom.owner_index = soldierTroupsOrigin.owner_index
 			soldier_node.arrive()
@@ -143,7 +145,7 @@ func missive_arrived(missive_node: MissiveNode) -> void:
 		kingdom.troups_number+=1
 		missive_node.arrive()
 	else:
-		if(kingdom.troups_number <= 0):
+		if(kingdom.troups_number <= 1):
 			kingdom.troups_number=1
 			kingdom.owner_index = missiveTroupsOrigin.owner_index
 			missive_node.arrive()

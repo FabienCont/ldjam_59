@@ -1,6 +1,6 @@
 extends Node
 
-const CURSOR_TEXTURE = preload("res://assets/cursor.svg")
+const CURSOR_TEXTURE = preload("res://assets/sprites/pointer.png")
 
 signal level_finished()
 signal start_new_turn()

@@ -18,6 +18,7 @@ const PENDING_SHADER = preload("res://assets/shader/pending_move.gdshader")
 @export var play_turn_button  :Button
 @export var cancel_button  :Button
 @export var pending_move_icon  :TextureRect
+@export var loader  :TextureRect
 
 var speed: float = 1.0:
 	set= set_speed
@@ -103,6 +104,7 @@ func _update_action_buttons() -> void:
 	var is_command_selected := GameManager.turn_state == GameManager.TurnState.COMMAND_SELECTED
 	skip_turn_button.visible = not is_command_selected and not is_playing
 	command_selected_container.visible = is_command_selected and not is_playing
+	loader.visible = is_playing
 
 func _on_play_turn_pressed() -> void:
 	GameManager.confirm_command()

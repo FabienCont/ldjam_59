@@ -26,12 +26,9 @@ AudioManager="*uid://dlyddqdj5gx0v"
 
 [display]
 
-window/size/mode=3
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
-window/stretch/scale_mode="fractional"
-window/handheld/orientation=0
-mouse_cursor/custom_image="uid://d3d3m83177esu"
+mouse_cursor/custom_image="uid://dckut4hgqi6cw"
 mouse_cursor/custom_image_hotspot=Vector2(7, 0)
 environment/defaults/default_clear_color=Color(0, 0, 0, 1)
 window/size/width=1152
@@ -72,7 +69,7 @@ zoom_out={
 
 [input_devices]
 
-pointing/emulate_touch_from_mouse=true
+pointing/emulate_mouse_from_touch=false
 
 [layer_names]
 

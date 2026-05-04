@@ -4,14 +4,22 @@
 [ext_resource type="Theme" uid="uid://df7ydgqi56bsa" path="res://resources/theme.tres" id="2_ua5xg"]
 [ext_resource type="Shader" uid="uid://boptwmw75bocf" path="res://assets/shader/pending_move.gdshader" id="4_5ptdr"]
 [ext_resource type="PackedScene" uid="uid://bqpcdd7u0wwva" path="res://scenes/menu/menu_end_game.tscn" id="4_rrkdu"]
+[ext_resource type="Texture2D" uid="uid://ub2onbjdhcoq" path="res://assets/ui/loader.aseprite" id="5_4wgpk"]
 [ext_resource type="Texture2D" uid="uid://chf336fnsfprl" path="res://assets/sprites/icon_soldier_16x16.aseprite" id="5_icker"]
+[ext_resource type="Shader" uid="uid://b3jsrd4w16bpf" path="res://assets/shader/loader.gdshader" id="6_4wgpk"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4wgpk"]
 shader = ExtResource("4_5ptdr")
 shader_parameter/pulse_speed = 2.0
 shader_parameter/tint_color = Color(0.85258347, 0.8637014, 0.8581495, 1)
 
-[node name="LevelManager" type="Control" unique_id=1727170313 node_paths=PackedStringArray("end_menu", "viewport", "turn_label", "button_label", "button_speed1", "button_speed2", "button_speed4", "skip_turn_button", "command_selected_container", "play_turn_button", "cancel_button", "pending_move_icon")]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iy1wn"]
+shader = ExtResource("6_4wgpk")
+shader_parameter/spin_texture = ExtResource("5_4wgpk")
+shader_parameter/clockwise = true
+shader_parameter/speed = 1.5000000712500001
+
+[node name="LevelManager" type="Control" unique_id=1727170313 node_paths=PackedStringArray("end_menu", "viewport", "turn_label", "button_label", "button_speed1", "button_speed2", "button_speed4", "skip_turn_button", "command_selected_container", "play_turn_button", "cancel_button", "pending_move_icon", "loader")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -32,6 +40,7 @@ command_selected_container = NodePath("AspectRatioContainer/MarginContainer/Acti
 play_turn_button = NodePath("AspectRatioContainer/MarginContainer/ActionContainer/CommandSelectedContainer/PlayTurnButton")
 cancel_button = NodePath("AspectRatioContainer/MarginContainer/ActionContainer/CommandSelectedContainer/CancelButton")
 pending_move_icon = NodePath("AspectRatioContainer/MarginContainer/ActionContainer/CommandSelectedContainer/PendingMoveIcon")
+loader = NodePath("AspectRatioContainer/MarginContainer/ActionContainer/LoaderTextureRect")
 
 [node name="AspectRatioContainer" type="AspectRatioContainer" parent="." unique_id=800000001]
 layout_mode = 1
@@ -136,6 +145,12 @@ text = "Play Turn"
 layout_mode = 2
 theme = ExtResource("2_ua5xg")
 text = "Cancel"
+
+[node name="LoaderTextureRect" type="TextureRect" parent="AspectRatioContainer/MarginContainer/ActionContainer" unique_id=961478099]
+material = SubResource("ShaderMaterial_iy1wn")
+layout_mode = 2
+texture = ExtResource("5_4wgpk")
+stretch_mode = 3
 
 [node name="EndMenu" parent="." unique_id=2093833323 instance=ExtResource("4_rrkdu")]
 layout_mode = 1

@@ -5,7 +5,6 @@ extends Camera2D
 @export var max_zoom := 1.6
 @export var zoom_factor := 0.1
 @export var zoom_duration := 0.2
-@export var drag_smoothing := 20.0
 @export var drag_friction := 10.0
 @export var pinch_zoom_sensitivity := 0.01
 @export_range(0.0, 1.0) var follow_margin_left := 0.6
@@ -23,7 +22,6 @@ extends Camera2D
 var _zoom_level := 1.3
 var _drag_velocity := Vector2.ZERO
 var _follow_delay_timer := 0.0
-var _is_mobile := false
 
 @onready var tween: Tween
 
@@ -33,7 +31,6 @@ func _ready() -> void:
 	drag_right_margin = 0.0
 	drag_top_margin = 0.0
 	drag_bottom_margin = 0.0
-	_is_mobile = OS.has_feature("mobile") or (OS.has_feature("web") and DisplayServer.is_touchscreen_available())
 
 ## Returns follow margins in world pixels based on viewport ratio and current zoom.
 func _follow_margins() -> Dictionary:
@@ -66,24 +63,26 @@ func _draw() -> void:
 
 func _process(delta: float) -> void:
 	var real_delta := delta / Engine.time_scale
+	var container := get_viewport().get_parent() as Control
+	var screen_to_vp := get_viewport_rect().size / container.size
 	if Input.is_action_just_pressed("zoom_in"):
 		_set_zoom_level(_zoom_level - zoom_factor)
 	elif Input.is_action_just_pressed("zoom_out"):
 		_set_zoom_level(_zoom_level + zoom_factor)
 	elif DragAutoload.is_pinching and DragAutoload.pinch_zoom_delta != 0.0:
-		_zoom_level = clamp(_zoom_level - DragAutoload.pinch_zoom_delta * pinch_zoom_sensitivity, min_zoom, max_zoom)
+		var scaled_delta := DragAutoload.pinch_zoom_delta * screen_to_vp.x
+		_zoom_level = clamp(_zoom_level - scaled_delta * pinch_zoom_sensitivity, min_zoom, max_zoom)
 		zoom = Vector2(_zoom_level, _zoom_level)
 		DragAutoload.pinch_zoom_delta = 0.0
 	elif DragAutoload.is_dragging:
 		_follow_delay_timer = 0.0
-		_drag_velocity = lerp(_drag_velocity, DragAutoload.drag_vector, real_delta * drag_smoothing)
+		_drag_velocity = DragAutoload.drag_vector * screen_to_vp / zoom.x
 		DragAutoload.drag_vector = Vector2.ZERO
 	else:
 		_drag_velocity = lerp(_drag_velocity, Vector2.ZERO, real_delta * drag_friction)
-		if DragAutoload.eventIndex == -1 and not _is_mobile:
-			_process_edge_scroll(real_delta)
-		if debug_zones:
-			queue_redraw()
+		_process_edge_scroll(real_delta)
+	if debug_zones:
+		queue_redraw()
 	global_position -= _drag_velocity
 
 func _process_edge_scroll(real_delta: float) -> void:
