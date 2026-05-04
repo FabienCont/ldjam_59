@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://by7jhm84m0us0" path="res://scenes/level_manager.gd" id="1_ua5xg"]
 [ext_resource type="Theme" uid="uid://df7ydgqi56bsa" path="res://resources/theme.tres" id="2_ua5xg"]
 [ext_resource type="Shader" uid="uid://boptwmw75bocf" path="res://assets/shader/pending_move.gdshader" id="4_5ptdr"]
-[ext_resource type="PackedScene" uid="uid://bqpcdd7u0wwva" path="res://scenes/menu/menu_end_game.tscn" id="4_rrkdu"]
+[ext_resource type="PackedScene" uid="uid://bqpcdd7u0wwva" path="res://scenes/menu/menu_end_level.tscn" id="4_rrkdu"]
 [ext_resource type="Texture2D" uid="uid://ub2onbjdhcoq" path="res://assets/ui/loader.aseprite" id="5_4wgpk"]
 [ext_resource type="Texture2D" uid="uid://chf336fnsfprl" path="res://assets/sprites/icon_soldier_16x16.aseprite" id="5_icker"]
 [ext_resource type="Shader" uid="uid://b3jsrd4w16bpf" path="res://assets/shader/loader.gdshader" id="6_4wgpk"]

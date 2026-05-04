@@ -1,16 +1,18 @@
 [gd_scene format=3 uid="uid://bgnqlufihyykn"]
 
 [ext_resource type="Texture2D" uid="uid://4rplhkyvk52t" path="res://assets/splash/splash_screen.png" id="1_mwn6m"]
+[ext_resource type="Script" uid="uid://d0b8nt0cu3mnx" path="res://scenes/menu/end.gd" id="1_p7m4f"]
 [ext_resource type="Texture2D" uid="uid://wiglucppqkle" path="res://assets/sprites/icon_missive.aseprite" id="2_3d26k"]
-[ext_resource type="Script" uid="uid://erdftshmip1l" path="res://scenes/button.gd" id="3_p7m4f"]
 
-[node name="Control" type="Control" unique_id=1005822102]
+[node name="Control" type="Control" unique_id=1005822102 node_paths=PackedStringArray("return_menu_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_p7m4f")
+return_menu_button = NodePath("CenterContainer/VBoxContainer/ReturnMenuButton")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1710537027]
 layout_mode = 1
@@ -46,9 +48,6 @@ text = "Kwak, Thanks for playing, Kwak ! "
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Button" type="Button" parent="CenterContainer/VBoxContainer" unique_id=376357988]
+[node name="ReturnMenuButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=376357988]
 layout_mode = 2
 text = "Return to Menu!"
-script = ExtResource("3_p7m4f")
-
-[connection signal="pressed" from="CenterContainer/VBoxContainer/Button" to="CenterContainer/VBoxContainer/Button" method="_on_pressed"]

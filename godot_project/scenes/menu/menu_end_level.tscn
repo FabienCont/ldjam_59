@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bqpcdd7u0wwva"]
 
-[ext_resource type="Script" uid="uid://rytj1qdo17q3" path="res://scenes/menu/menu_end_game.gd" id="1_pnxb1"]
+[ext_resource type="Script" uid="uid://rytj1qdo17q3" path="res://scenes/menu/menu_end_level.gd" id="1_pnxb1"]
 [ext_resource type="Theme" uid="uid://df7ydgqi56bsa" path="res://resources/theme.tres" id="2_510ao"]
 
 [node name="CenterContainer" type="CenterContainer" unique_id=2093833323]
