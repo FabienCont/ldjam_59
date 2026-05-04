@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://ub2onbjdhcoq" path="res://assets/ui/loader.aseprite" id="5_4wgpk"]
 [ext_resource type="Texture2D" uid="uid://chf336fnsfprl" path="res://assets/sprites/icon_soldier_16x16.aseprite" id="5_icker"]
 [ext_resource type="Shader" uid="uid://b3jsrd4w16bpf" path="res://assets/shader/loader.gdshader" id="6_4wgpk"]
+[ext_resource type="PackedScene" uid="uid://cc7ujhmq2hguy" path="res://scenes/ui/option_button.tscn" id="7_cgof5"]
+[ext_resource type="PackedScene" uid="uid://u0e34kvnak1a" path="res://scenes/menu/pause_menu.tscn" id="8_iy1wn"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4wgpk"]
 shader = ExtResource("4_5ptdr")
@@ -17,9 +19,9 @@ shader_parameter/tint_color = Color(0.85258347, 0.8637014, 0.8581495, 1)
 shader = ExtResource("6_4wgpk")
 shader_parameter/spin_texture = ExtResource("5_4wgpk")
 shader_parameter/clockwise = true
-shader_parameter/speed = 1.5000000712500001
+shader_parameter/speed = 1.50000007125
 
-[node name="LevelManager" type="Control" unique_id=1727170313 node_paths=PackedStringArray("end_menu", "viewport", "turn_label", "button_label", "button_speed1", "button_speed2", "button_speed4", "skip_turn_button", "command_selected_container", "play_turn_button", "cancel_button", "pending_move_icon", "loader")]
+[node name="LevelManager" type="Control" unique_id=1727170313 node_paths=PackedStringArray("end_menu", "pause_menu", "viewport", "turn_label", "button_label", "button_speed1", "button_speed2", "button_speed4", "skip_turn_button", "command_selected_container", "play_turn_button", "cancel_button", "pending_move_icon", "loader", "option_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -29,6 +31,7 @@ grow_vertical = 2
 mouse_filter = 1
 script = ExtResource("1_ua5xg")
 end_menu = NodePath("EndMenu")
+pause_menu = NodePath("PauseMenu")
 viewport = NodePath("AspectRatioContainer/SubViewportContainer/SubViewport")
 turn_label = NodePath("AspectRatioContainer/MarginContainer/TurnLabel")
 button_label = NodePath("AspectRatioContainer/MarginContainer/HBoxContainer2/SpeedLabel")
@@ -41,6 +44,7 @@ play_turn_button = NodePath("AspectRatioContainer/MarginContainer/ActionContaine
 cancel_button = NodePath("AspectRatioContainer/MarginContainer/ActionContainer/CommandSelectedContainer/CancelButton")
 pending_move_icon = NodePath("AspectRatioContainer/MarginContainer/ActionContainer/CommandSelectedContainer/PendingMoveIcon")
 loader = NodePath("AspectRatioContainer/MarginContainer/ActionContainer/LoaderTextureRect")
+option_button = NodePath("AspectRatioContainer/MarginContainer/OptionButton")
 
 [node name="AspectRatioContainer" type="AspectRatioContainer" parent="." unique_id=800000001]
 layout_mode = 1
@@ -152,5 +156,13 @@ layout_mode = 2
 texture = ExtResource("5_4wgpk")
 stretch_mode = 3
 
+[node name="OptionButton" parent="AspectRatioContainer/MarginContainer" unique_id=511250849 instance=ExtResource("7_cgof5")]
+layout_mode = 2
+
 [node name="EndMenu" parent="." unique_id=2093833323 instance=ExtResource("4_rrkdu")]
+visible = false
+layout_mode = 1
+
+[node name="PauseMenu" parent="." unique_id=1799914960 instance=ExtResource("8_iy1wn")]
+visible = false
 layout_mode = 1

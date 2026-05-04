@@ -1,11 +1,12 @@
 extends Control
 
-const END_SCENE_PATH: String = "res://scenes/end.tscn"
+const END_SCENE_PATH: String = "res://scenes/menu/end.tscn"
 const SOLDIER_TEXTURE = preload("res://assets/sprites/icon_soldier_16x16.aseprite")
 const MISSIVE_TEXTURE = preload("res://assets/sprites/icon_missive_16x16.aseprite")
 const PENDING_SHADER = preload("res://assets/shader/pending_move.gdshader")
 
 @export var end_menu:Control 
+@export var pause_menu:Control 
 @export var viewport  :SubViewport 
 
 @export var turn_label:Label
@@ -19,6 +20,7 @@ const PENDING_SHADER = preload("res://assets/shader/pending_move.gdshader")
 @export var cancel_button  :Button
 @export var pending_move_icon  :TextureRect
 @export var loader  :TextureRect
+@export var option_button  :TextureButton
 
 var speed: float = 1.0:
 	set= set_speed
@@ -30,6 +32,8 @@ func _ready() -> void:
 	skip_turn_button.pressed.connect(skip_turn)
 	play_turn_button.pressed.connect(_on_play_turn_pressed)
 	cancel_button.pressed.connect(_on_cancel_pressed)
+	option_button.pressed.connect(_on_option_button_pressed)
+	pause_menu.visibility_changed.connect(_on_pause_menu_visibility_changed)
 	GameManager.command_selected.connect(_on_command_selected)
 	GameManager.command_cancelled.connect(_on_command_ui_cancelled)
 	GameManager.start_new_turn.connect(_on_turn_state_changed)
@@ -42,6 +46,7 @@ func _ready() -> void:
 	GameManager.level_finished.connect(_on_level_finish)
 	SceneManager.preload_scene(END_SCENE_PATH)
 	end_menu.visible = false
+	pause_menu.visible = false
 	_update_action_buttons()
 	pass
 
@@ -106,6 +111,15 @@ func _update_action_buttons() -> void:
 	command_selected_container.visible = is_command_selected and not is_playing
 	loader.visible = is_playing
 
+func _on_option_button_pressed() -> void:
+	pause_menu.visible = true
+
+func _on_pause_menu_visibility_changed() -> void:
+	if not pause_menu.visible:
+		_enable_process()
+	else:
+		_disable_process()
+
 func _on_play_turn_pressed() -> void:
 	GameManager.confirm_command()
 
@@ -115,3 +129,13 @@ func _on_cancel_pressed() -> void:
 func skip_turn() -> void:
 	GameManager.skip_turn()
 	pass
+
+func _disable_process() -> void:
+	if GameManager.level:
+		GameManager.level.process_mode =  Node.PROCESS_MODE_DISABLED
+		AudioManager.pause_game_audio()
+
+func _enable_process() -> void:
+	if GameManager.level:
+		GameManager.level.process_mode =  Node.PROCESS_MODE_INHERIT
+		AudioManager.resume_game_audio()

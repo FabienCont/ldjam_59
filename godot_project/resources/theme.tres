@@ -1,5 +1,6 @@
 [gd_resource type="Theme" format=3 uid="uid://df7ydgqi56bsa"]
 
+[ext_resource type="Texture2D" uid="uid://c1fyr2i2vimhr" path="res://assets/ui/panel.aseprite" id="1_7ct1h"]
 [ext_resource type="FontFile" uid="uid://cm2r5kqrngglu" path="res://assets/fonts/Kenney Pixel.ttf" id="1_d4nwg"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d4nwg"]
@@ -28,9 +29,23 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7ct1h"]
+content_margin_left = 33.0
+content_margin_top = 30.0
+content_margin_right = 30.0
+content_margin_bottom = 30.0
+texture = ExtResource("1_7ct1h")
+texture_margin_left = 9.529899
+texture_margin_top = 9.324223
+texture_margin_right = 9.13963
+texture_margin_bottom = 9.324223
+region_rect = Rect2(1, 1, 94, 94)
+
 [resource]
 default_font = ExtResource("1_d4nwg")
 default_font_size = 48
 Button/styles/hover = SubResource("StyleBoxFlat_d4nwg")
 Button/styles/normal = SubResource("StyleBoxFlat_d4nwg")
 Button/styles/pressed = SubResource("StyleBoxFlat_7ct1h")
+Label/fonts/font = ExtResource("1_d4nwg")
+PanelContainer/styles/panel = SubResource("StyleBoxTexture_7ct1h")

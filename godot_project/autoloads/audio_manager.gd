@@ -99,3 +99,12 @@ func _ensure_bus(bus_name: String) -> void:
 	AudioServer.add_bus(idx)
 	AudioServer.set_bus_name(idx, bus_name)
 	AudioServer.set_bus_send(idx, "Master")
+
+func pause_game_audio():
+	for p in _sfx_pool:
+		p.stream_paused = true
+
+func resume_game_audio():
+	for p in _sfx_pool:
+		if p.stream:
+			p.stream_paused = false

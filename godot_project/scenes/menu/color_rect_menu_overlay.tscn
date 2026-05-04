@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://bbg5l3lfwflbx"]
+
+[node name="TextureRect" type="ColorRect" unique_id=2088443789]
+clip_contents = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.023529412, 0.023529412, 0.023529412, 0.63529414)

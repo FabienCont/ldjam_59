@@ -63,6 +63,8 @@ func get_next_level() -> Node:
 
 func setup() -> void:
 	kingdoms = []
+	level = null
+	turn_controller = TurnController.new()
 	game_state  = GameState.NOT_STARTED;
 	turn_state  = TurnState.WAITING;
 	turn= 0;

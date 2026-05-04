@@ -6,6 +6,7 @@ extends Control
 const LEVEL_SCENE_PATH: String = "scenes/LevelManager.tscn"
 
 func _ready():
+	GameManager.reset()
 	SceneManager.preload_scene(LEVEL_SCENE_PATH)
 	start_button.connect("pressed", Callable(self , "_on_start_button_pressed"))
 	RenderingServer.set_default_clear_color(Color(0, 0, 0, 1))

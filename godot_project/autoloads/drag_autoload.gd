@@ -3,6 +3,7 @@ extends Node
 enum InputType { NONE, TOUCH, MOUSE }
 
 var is_dragging = false
+var just_finished_drag := false
 var drag_vector: Vector2
 
 var is_pinching := false
@@ -37,6 +38,7 @@ func _begin_pointer(index: int, position: Vector2, input_type: InputType) -> voi
 			is_dragging = false
 			drag_vector = Vector2.ZERO
 			return
+	just_finished_drag = false
 	eventIndex = index
 	eventLastVec = position
 	_touch_time = 0.0
@@ -58,6 +60,7 @@ func _end_pointer(index: int, input_type: InputType) -> void:
 		eventIndex = -1
 		relativeVec = Vector2.ZERO
 		drag_vector = Vector2.ZERO
+		just_finished_drag = is_dragging
 		is_dragging = false
 		_touch_time = 0.0
 

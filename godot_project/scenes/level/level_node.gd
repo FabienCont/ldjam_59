@@ -21,12 +21,14 @@ func _ready() -> void:
 	GameManager.start_new_turn.connect(highlight_controller.reset_highlight)
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		_click_consumed_by_kingdom = false
-		call_deferred("_on_click_deferred")
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			_click_consumed_by_kingdom = false
+		else:
+			call_deferred("_on_click_deferred")
 
 func _on_click_deferred() -> void:
-	if not _click_consumed_by_kingdom and GameManager.turn_state != GameManager.TurnState.COMMAND_SELECTED:
+	if not _click_consumed_by_kingdom and not DragAutoload.just_finished_drag and GameManager.turn_state != GameManager.TurnState.COMMAND_SELECTED:
 		highlight_controller.reset_highlight()
 	if not incoming_units_controller.icon_click_consumed:
 		incoming_units_controller.clear_preview()

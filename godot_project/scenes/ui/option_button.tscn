@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://cc7ujhmq2hguy"]
+
+[ext_resource type="Material" uid="uid://861uhq37pivs" path="res://assets/shader/highlight_material.tres" id="1_w6anj"]
+[ext_resource type="Theme" uid="uid://df7ydgqi56bsa" path="res://resources/theme.tres" id="2_w6anj"]
+[ext_resource type="Texture2D" uid="uid://co5aywwdgfpdy" path="res://assets/ui/options.aseprite" id="3_25jj6"]
+[ext_resource type="Script" uid="uid://cq3vpbbwh82ey" path="res://scenes/ui/option_button.gd" id="4_w6anj"]
+
+[node name="OptionButton" type="TextureButton" unique_id=511250849]
+material = ExtResource("1_w6anj")
+size_flags_horizontal = 8
+size_flags_vertical = 0
+theme = ExtResource("2_w6anj")
+texture_normal = ExtResource("3_25jj6")
+script = ExtResource("4_w6anj")
